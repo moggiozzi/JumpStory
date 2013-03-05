@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F44B13BD-F892-4305-A059-DDAF64B472F0}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <NMakeBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /build "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)" "/config:$(ConfigurationName)" "/platform:$(PlatformName)"</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /clean "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)" "/config:$(ConfigurationName)" "/platform:$(PlatformName)"</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /rebuild "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)" "/config:$(ConfigurationName)" "/platform:$(PlatformName)"</NMakeReBuildCommandLine>
+    <NMakeIncludeSearchPath>E:\Android\android-ndk-r8d\\platforms\android-9\arch-arm\usr\include;E:\Android\android-ndk-r8d\toolchains\arm-linux-androideabi-4.7\prebuilt\windows\lib\gcc\arm-linux-androideabi\4.7\include;E:\Android\android-ndk-r8d\toolchains\arm-linux-androideabi-4.7\prebuilt\windows\lib\gcc\arm-linux-androideabi\4.7\include-fixed;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeOutput>$(ProjectDir)JumpStory-Debug.vgdbsettings</NMakeOutput>
+    <NMakeForcedIncludes>$(VISUALGDB_DIR)\gcc_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
+    <IncludePath>E:\Android\android-ndk-r8d\platforms\android-9\arch-arm\usr\include\android;E:\Android\android-ndk-r8d\platforms\android-9\arch-arm\usr\include;E:\Android\android-ndk-r8d\sources;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <NMakeBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /build "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)" "/config:$(ConfigurationName)" "/platform:$(PlatformName)"</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /clean "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)" "/config:$(ConfigurationName)" "/platform:$(PlatformName)"</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /rebuild "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)" "/config:$(ConfigurationName)" "/platform:$(PlatformName)"</NMakeReBuildCommandLine>
+    <NMakeIncludeSearchPath>E:\Android\android-ndk-r8d\\platforms\android-9\arch-arm\usr\include;E:\Android\android-ndk-r8d\toolchains\arm-linux-androideabi-4.7\prebuilt\windows\lib\gcc\arm-linux-androideabi\4.7\include;E:\Android\android-ndk-r8d\toolchains\arm-linux-androideabi-4.7\prebuilt\windows\lib\gcc\arm-linux-androideabi\4.7\include-fixed;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeOutput>$(ProjectDir)JumpStory-Release.vgdbsettings</NMakeOutput>
+    <NMakeForcedIncludes>$(VISUALGDB_DIR)\gcc_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Xml Include="AndroidManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="jni\Android.mk" />
+    <None Include="jni\Application.mk" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="jni\Game.cpp" />
+    <ClCompile Include="jni\GLHelper.cpp" />
+    <ClCompile Include="jni\Global.cpp" />
+    <ClCompile Include="jni\jumpstory.cpp" />
+    <ClCompile Include="jni\Menu.cpp" />
+    <ClCompile Include="jni\ResourceManager.cpp" />
+    <ClCompile Include="jni\Sprite.cpp" />
+    <ClCompile Include="jni\World.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="jni\Game.h" />
+    <ClInclude Include="jni\GLHelper.h" />
+    <ClInclude Include="jni\Global.h" />
+    <ClInclude Include="jni\Helper.h" />
+    <ClInclude Include="jni\Menu.h" />
+    <ClInclude Include="jni\ResourceManager.h" />
+    <ClInclude Include="jni\Sprite.h" />
+    <ClInclude Include="jni\World.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

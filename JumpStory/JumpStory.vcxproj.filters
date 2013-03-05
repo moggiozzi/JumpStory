@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{40345f4d-d9a5-4c06-a503-4dc8e90746f6}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{e780132a-5ae4-411c-98e8-96819900e611}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource files">
+      <UniqueIdentifier>{6b60fd5e-b767-4eac-9505-f7c80a83eb4c}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Java Source Files">
+      <UniqueIdentifier>{99e896cc-fba1-4df7-b407-d79b2a8a5f8e}</UniqueIdentifier>
+      <Extensions>*.java</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="AndroidManifest.xml">
+      <Filter>Source files</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="jni\Android.mk" />
+    <None Include="jni\Application.mk">
+      <Filter>Source files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="jni\Game.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\GLHelper.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\Global.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\jumpstory.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\Menu.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\ResourceManager.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\Sprite.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\World.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="jni\Game.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\GLHelper.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\Global.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\Helper.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\Menu.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\ResourceManager.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\Sprite.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\World.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
