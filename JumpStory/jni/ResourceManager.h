@@ -13,7 +13,7 @@ class ResourceManager{
 	static AAssetManager *assetManager;
 
 	static uint lastTextureID;
-	static std::map<uint, mTexture*> textures;
+	static std::map<uint, Texture*> textures;
 
 	static jclass    bitmapFactoryClass;
 	static jmethodID decodeByteArrayID;
@@ -31,7 +31,7 @@ public:
 	* Id for access to bitmap and image info (AndroidBitmapInfo structure)
 	*/
 	static int loadImage(const char *path, int format = GL_RGBA);
-	static mTexture* getTexture(uint id);
+	static Texture* getTexture(uint id);
 	static char* getBytes(const char *fileName, uint &length);
 };
 

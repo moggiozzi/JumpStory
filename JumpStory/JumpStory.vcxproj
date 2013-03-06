@@ -41,7 +41,7 @@
     <NMakeIncludeSearchPath>E:\Android\android-ndk-r8d\\platforms\android-9\arch-arm\usr\include;E:\Android\android-ndk-r8d\toolchains\arm-linux-androideabi-4.7\prebuilt\windows\lib\gcc\arm-linux-androideabi\4.7\include;E:\Android\android-ndk-r8d\toolchains\arm-linux-androideabi-4.7\prebuilt\windows\lib\gcc\arm-linux-androideabi\4.7\include-fixed;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <NMakeOutput>$(ProjectDir)JumpStory-Debug.vgdbsettings</NMakeOutput>
     <NMakeForcedIncludes>$(VISUALGDB_DIR)\gcc_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
-    <IncludePath>E:\Android\android-ndk-r8d\platforms\android-9\arch-arm\usr\include\android;E:\Android\android-ndk-r8d\platforms\android-9\arch-arm\usr\include;E:\Android\android-ndk-r8d\sources;$(IncludePath)</IncludePath>
+    <IncludePath>E:\Android\android-ndk-r8d\sources\android\native_app_glue;E:\Android\android-ndk-r8d\platforms\android-9\arch-arm\usr\include\android;E:\Android\android-ndk-r8d\platforms\android-9\arch-arm\usr\include;E:\Android\android-ndk-r8d\sources;E:\Android\android-ndk-r8d\sources\cxx-stl\stlport\stlport;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /build "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)" "/config:$(ConfigurationName)" "/platform:$(PlatformName)"</NMakeBuildCommandLine>
@@ -61,6 +61,8 @@
     <None Include="jni\Application.mk" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="jni\Character.cpp" />
+    <ClCompile Include="jni\CollisionLayer.cpp" />
     <ClCompile Include="jni\Game.cpp" />
     <ClCompile Include="jni\GLHelper.cpp" />
     <ClCompile Include="jni\Global.cpp" />
@@ -71,6 +73,8 @@
     <ClCompile Include="jni\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="jni\Character.h" />
+    <ClInclude Include="jni\CollisionLayer.h" />
     <ClInclude Include="jni\Game.h" />
     <ClInclude Include="jni\GLHelper.h" />
     <ClInclude Include="jni\Global.h" />

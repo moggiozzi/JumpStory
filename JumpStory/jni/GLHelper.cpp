@@ -5,12 +5,12 @@
 #include <math.h>
 #include "GLhelper.h"
 #include "Global.h"
+#include "android/native_window.h" // ANativeWindow_setBuffersGeometry(
 
 #define gradToRad(x) (x * 0.0174532925199)
 #define radToGrad(x) (x * 57.295779513082)
 #define isglerr(str) {int err; if((err=glGetError())!=GL_NO_ERROR) LOGI("%s error 0x%X", str, err);}
 
-// Без объявления статичных полей получим error: undefined refernece
 EGLDisplay GLHelper::display;
 EGLSurface GLHelper::surface;
 EGLContext GLHelper::context;
@@ -21,7 +21,7 @@ float GLHelper::myWidth;
 float GLHelper::myHeight;
 float GLHelper::points_[MAX_POINTS_COUNT];
 
-mTexture *GLHelper::fontTexture;
+Texture *GLHelper::fontTexture;
 
 int GLHelper::init(ANativeWindow* window){
     const EGLint attribs[] = {
@@ -48,15 +48,6 @@ int GLHelper::init(ANativeWindow* window){
     }
     eglQuerySurface(display, surface, EGL_WIDTH, &w);
     eglQuerySurface(display, surface, EGL_HEIGHT, &h);
-//	if(w>h){
-//	    myWidth  = (float)w/h*2;
-//	    myHeight = 2.0;
-//		glScalef((float)h/w,1,1);
-//	}else{
-//	   	myWidth  = 2.0;
-//	    myHeight = (float)h/w*2;
-//	    glScalef(1,(float)w/h,1);
-//	}
 	width  = w;
 	height = h;
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
@@ -183,7 +174,7 @@ void GLHelper::drawTriangle2d(float x1, float y1, float x2, float y2, float x3, 
 	glDrawArrays( GL_TRIANGLE_FAN, 0, 3 );
 }
 
-void GLHelper::drawTexturef(mTexture* texture, GLfloat x, GLfloat y, GLfloat width, GLfloat height,
+void GLHelper::drawTexturef(Texture* texture, GLfloat x, GLfloat y, GLfloat width, GLfloat height,
 		GLint tx, GLint ty, GLint tw, GLint th){
 	if(tw==-1){
 		tw = texture->width;
@@ -222,7 +213,7 @@ void GLHelper::drawTexturef(mTexture* texture, GLfloat x, GLfloat y, GLfloat wid
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
-void GLHelper::drawTexture(mTexture* texture, int dx, int dy, int dw, int dh,
+void GLHelper::drawTexture(Texture* texture, int dx, int dy, int dw, int dh,
 		int tx, int ty, int tw, int th){
 	if(tw==-1){
 		tw = texture->width;
@@ -267,8 +258,52 @@ void GLHelper::drawTexture(mTexture* texture, int dx, int dy, int dw, int dh,
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
+void GLHelper::drawText(int x, int y, const char* text, uint size){
+	uint len = strnlen(text,255);
+	uint fontTextureSize = 256;
+	uint glyphSize = 16;
+	float textureCoords[8];
+	if(!fontTexture->isGenTexNameGl){
+		glGenTextures(1, &fontTexture->texNameGl);
+		isglerr("Eror glGenTextures");
+	}
+	glEnable (GL_TEXTURE_2D);
+	isglerr("Error glEnable(GL_TEXTURE_2D)");
+	glEnable(GL_BLEND);
+	//glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_ALPHA);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);//GL_SRC_ALPHA);
+	glEnableClientState (GL_TEXTURE_COORD_ARRAY);
+	glBindTexture(GL_TEXTURE_2D, fontTexture->texNameGl);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	//LOGI("f%d",texture->format);
+	glTexImage2D(GL_TEXTURE_2D, 0, fontTexture->format, fontTexture->width, fontTexture->height, 0,
+			fontTexture->format, GL_UNSIGNED_BYTE, fontTexture->pixels);
+	isglerr("Eror loading texture into OpenGL.");
+	glVertexPointer(2, GL_FLOAT, 0, points_);
+	glTexCoordPointer(2, GL_FLOAT, 0, textureCoords);
 
-void GLHelper::drawText(float x, float y, const char* text, float size){
+	int i,j;
+	for(uint k=0;k<len;k++){
+		i=text[k]/16;
+		j=text[k]%16;
+		textureCoords[0]=(float)j*glyphSize/fontTextureSize;	textureCoords[1]=(float)i*glyphSize/fontTextureSize;
+		textureCoords[2]=(float)j*glyphSize/fontTextureSize;	textureCoords[3]=(float)(i+1)*glyphSize/fontTextureSize;
+		textureCoords[4]=(float)(j+1)*glyphSize/fontTextureSize;textureCoords[5]=(float)(i+1)*glyphSize/fontTextureSize;
+		textureCoords[6]=(float)(j+1)*glyphSize/fontTextureSize;textureCoords[7]=(float)i*glyphSize/fontTextureSize;
+
+		points_[0] = xToGl(x+k*size);	   points_[1] = yToGl(y);
+		points_[2] = xToGl(x+k*size);	   points_[3] = yToGl(y+size);
+		points_[4] = xToGl(x+(k+1)*size); points_[5] = yToGl(y+size);
+		points_[6] = xToGl(x+(k+1)*size); points_[7] = yToGl(y);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+	}
+}
+
+void GLHelper::drawTextf(float x, float y, const char* text, float size){
 	uint len = strlen(text);
 	uint fontTextureSize = 256;
 	uint glyphSize = 16;

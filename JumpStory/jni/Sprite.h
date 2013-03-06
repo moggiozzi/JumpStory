@@ -4,11 +4,11 @@
 #include "GLHelper.h"
 
 class Sprite{
-	mTexture *texture;
+	Texture *texture;
 	/// прямоугольник текстуры для отрисовки
-	Rect<uint> rect;
+	Rect rect;
 public:
-	Sprite( mTexture *tex, int x, int y, int w, int h ) :
+	Sprite( Texture *tex, int x, int y, int w, int h ) :
 		rect( x, y, w, h ), texture( tex ) { }
 	void draw(int x, int y);
 	void draw(int x, int y, int w, int h);

@@ -5,7 +5,7 @@ JNIEnv *ResourceManager::env;
 AAssetManager *ResourceManager::assetManager;
 
 uint ResourceManager::lastTextureID;
-std::map<uint, mTexture*> ResourceManager::textures;
+std::map<uint, Texture*> ResourceManager::textures;
 
 jclass    ResourceManager::bitmapFactoryClass;
 jmethodID ResourceManager::decodeByteArrayID;
@@ -83,19 +83,19 @@ int ResourceManager::loadImage(const char *path, int format) {
 	}
 //todo
 
-	mTexture *texture = new mTexture();
+	Texture *texture = new Texture();
 	texture->width = bitmapInfo.width;
 	texture->height = bitmapInfo.height;
 	texture->format = format;
 	texture->pixels = (char*)textureData;
 	lastTextureID++;
-	textures.insert(std::pair<uint,mTexture*>(lastTextureID,texture));
+	textures.insert(std::pair<uint,Texture*>(lastTextureID,texture));
 	LOGI("loading %s is OK; format:%d", path, format);
 	return lastTextureID;
 }
 
-mTexture* ResourceManager::getTexture(uint id) {
-	std::map<uint,mTexture*>::iterator it = textures.find(id);
+Texture* ResourceManager::getTexture(uint id) {
+	std::map<uint,Texture*>::iterator it = textures.find(id);
 	if (it!=textures.end())
 		return it->second;
 	LOGI("texture with id=%d not exist",id);

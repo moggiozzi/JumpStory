@@ -1,8 +1,12 @@
 #include <errno.h>
+// !!! only in codding
+//#include <android/input.h> // for AInputEvent, AINPUT_EVENT_TYPE_MOTION, ...
+//#include <android/native_app_glue/android_native_app_glue.h> // for android_app
+// !!! only in codding !!!
+
 #include <android/sensor.h>
 #include <unistd.h> /* sleep() */
 #include <time.h>
-
 #include "Global.h"
 #include "Game.h"
 
@@ -11,7 +15,7 @@ JNIEnv *jni;
 
 clock_t lastTime=0, currentTime=0;
 
-Game game;
+Game *game;
 
 struct engine {
     struct android_app* app;
@@ -45,8 +49,8 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
             break;
         case APP_CMD_INIT_WINDOW:
             if (engine->app->window != NULL) {
-            	game.init(app);
-            	game.draw();
+            	game->init(app);
+            	game->draw();
             }
             break;
         case APP_CMD_TERM_WINDOW:
@@ -70,7 +74,7 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
             }
             // Also stop animating.
             engine->animating = 0;
-            game.draw();
+            game->draw();
             break;
     }
 }
@@ -84,6 +88,7 @@ void android_main(struct android_app* state) {
 	  sleep(1);
 	}
 #endif
+	game = new Game();
     struct engine engine;
     // Make sure glue isn't stripped.
     app_dummy();
@@ -144,8 +149,8 @@ void android_main(struct android_app* state) {
 
         if (engine.animating) {
         	currentTime = clock();
-        	//game.doStep((float)(currentTime-lastTime)/CLOCKS_PER_SEC);
-            game.draw();
+        	//game->doStep((float)(currentTime-lastTime)/CLOCKS_PER_SEC);
+            game->draw();
         	lastTime = currentTime;
         }
     }
