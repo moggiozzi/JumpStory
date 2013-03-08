@@ -12,10 +12,7 @@
 #define isnull(str,var) if(var==NULL)LOGI("%s is NULL",str);else LOGI("%s is OK",str);
 #define isglerr(str) {int err; if((err=glGetError())!=GL_NO_ERROR) LOGI("%s error 0x%X", str, err);}
 #else // for release
-#define LOGI(...)
-#define LOGW(...)
-#define isnull(str,var)
-#define isglerr(str)
+#define DOEMPTYDEFS
 #endif
 
 
@@ -27,15 +24,20 @@
 void LogMessage ( char* format, ...);
 #define isnull(str,var) if(var==NULL)LOGI("%s is NULL",str);else LOGI("%s is OK",str);
 #define isglerr(str) {int err; if((err=glGetError())!=GL_NO_ERROR) LOGI("%s error 0x%X", str, err);}
-#else // for release
-#define LOGI(...)
-#define LOGW(...)
-#define isnull(str,var)
-#define isglerr(str)
+#else
+#define DOEMPTYDEFS
 #endif
 
 #elif __linux__
 //defs for linux
+#endif
+
+// for release
+#ifdef DOEMPTYDEFS
+#define LOGI(...)
+#define LOGW(...)
+#define isnull(str,var)
+#define isglerr(str)
 #endif
 
 typedef unsigned int uint;

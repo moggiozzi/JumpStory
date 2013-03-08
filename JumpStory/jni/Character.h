@@ -5,10 +5,10 @@
 #include "Sprite.h"
 
 class Character{
-	Point pos;
-	Sprite sprite;
+  Point pos;
+  Sprite sprite;
 public:
-	void draw();
+  void draw();
 
 };
 

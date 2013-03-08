@@ -5,11 +5,13 @@
 #include "World.h"
 
 class Game{
-	World world;
+  World world;
 public:
-	void init(android_app* app);
-	void draw();
-	void doStep(float dt);
+  Game();
+  void draw();
+  void update(float dt);
+  void save();
+  void resume();
 };
 
 #endif // GAME_H_

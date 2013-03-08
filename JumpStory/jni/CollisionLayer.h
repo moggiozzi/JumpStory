@@ -5,12 +5,12 @@
 #include "Helper.h"
 
 class CollisionLayer{
-	std::vector<Segment> segments;
+  std::vector<Segment> segments;
 public:
-	CollisionLayer();
-	bool isIntersect(const Point& p1, const Point& p2);
-	void draw();
-	void generate();
+  CollisionLayer();
+  bool isIntersect(const Point& p1, const Point& p2);
+  void draw();
+  void generate();
 };
 
 #endif

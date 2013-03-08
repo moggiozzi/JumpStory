@@ -15,42 +15,45 @@
 #endif
 
 class GLHelper{
-  #define MAX_POINTS_COUNT 64
-	static float points_[MAX_POINTS_COUNT];
+#define MAX_POINTS_COUNT 64
+  static float points_[MAX_POINTS_COUNT];
 
-	static uint width;
-	static uint height;
-	static Texture *fontTexture;
+  static uint width;
+  static uint height;
+  static Texture fontTexture;
 
-	inline static GLfloat xToGl(int x) { return static_cast<GLfloat>(((double)x/GLHelper::width-0.5)*2.0); }
-	inline static GLfloat yToGl(int y) { return static_cast<GLfloat>(((double)(height-y)/GLHelper::height-0.5)*2.0); }
+  inline static GLfloat xToGl(int x) { return static_cast<GLfloat>(((double)x/GLHelper::width-0.5)*2.0); }
+  inline static GLfloat yToGl(int y) { return static_cast<GLfloat>(((double)(height-y)/GLHelper::height-0.5)*2.0); }
 public:
 #ifdef __ANDROID__
   static EGLDisplay display;
   static EGLSurface surface;
   static EGLContext context;
-	static int init(ANativeWindow* window);
+  static bool init(ANativeWindow* window);
 #elif _WIN32
+  static HWND hWnd;
+  static HDC hDC;
+  static HGLRC hRC;
+  static bool init(HWND hWnd);
 #elif __linux__
 #endif
 
-	static void terminate();
+  static void swapBuffers();
+  static void terminate();
 
-	static uint getWidth(){return width;}
-	static uint getHeight(){return height;}
+  static uint getWidth(){return width;}
+  static uint getHeight(){return height;}
 
-	static void setFontTexture(Texture* ft) { fontTexture = ft; }
-
-	static void clear(GLfloat r=0, GLfloat g=0, GLfloat b=0, GLfloat a=1);
-	static void setColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a=1);
-	static void setLineWidth(GLuint w);
-	static void drawCircle2d(GLfloat x, GLfloat y, GLfloat r, uint points_number=16);
-	static void drawLine2d(GLint x1, GLint y1, GLint x2, GLint y2);
-	static void drawCircleSector2d(GLfloat x, GLfloat y, GLfloat r, GLfloat a1, GLfloat a2, uint points_number=16);
-	static void drawTriangle2d(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GLfloat x3, GLfloat y3);
-  	static void drawTexture(Texture* texture, int dx, int dy, int dw=-1, int dh=-1,
-			int tx=0, int ty=0, int tw=-1, int th=-1);
-	//static void drawText(int x, int y, const char* text, uint size=16);
+  static void clear(GLfloat r=0, GLfloat g=0, GLfloat b=0, GLfloat a=1);
+  static void setColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a=1);
+  static void setLineWidth(GLuint w);
+  static void drawCircle2d(GLfloat x, GLfloat y, GLfloat r, uint points_number=16);
+  static void drawLine2d(GLint x1, GLint y1, GLint x2, GLint y2);
+  static void drawCircleSector2d(GLfloat x, GLfloat y, GLfloat r, GLfloat a1, GLfloat a2, uint points_number=16);
+  static void drawTriangle2d(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GLfloat x3, GLfloat y3);
+  static void drawTexture(Texture* texture, int dx, int dy, int dw=-1, int dh=-1,
+    int tx=0, int ty=0, int tw=-1, int th=-1);
+  //static void drawText(int x, int y, const char* text, uint size=16);
 };
 
 #endif // GLHELPER_H_
