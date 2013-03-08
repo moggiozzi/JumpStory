@@ -48,6 +48,9 @@ struct Rect{
 };
 
 struct Texture {
+#if !defined(__ANDROID__)
+  int id; // id for DevIL data
+#endif
 	uint width;
 	uint height;
 	uint format;

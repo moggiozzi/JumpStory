@@ -1,18 +1,19 @@
 #include "ResourceManager.h"
-
-JavaVM *ResourceManager::jvm;
-JNIEnv *ResourceManager::env;
-AAssetManager *ResourceManager::assetManager;
+#include "GLHelper.h"
 
 uint ResourceManager::lastTextureID;
 std::map<uint, Texture*> ResourceManager::textures;
 
+#ifdef __ANDROID__
+JavaVM *ResourceManager::jvm;
+JNIEnv *ResourceManager::env;
+AAssetManager *ResourceManager::assetManager;
 jclass    ResourceManager::bitmapFactoryClass;
 jmethodID ResourceManager::decodeByteArrayID;
 jclass    ResourceManager::bitmapClass;
 jmethodID ResourceManager::getPixelsID;
 
-void ResourceManager::init(ANativeActivity* activity) {
+bool ResourceManager::init(ANativeActivity* activity) {
 	lastTextureID = 0;
 
 	env = activity->env;
@@ -34,13 +35,9 @@ void ResourceManager::init(ANativeActivity* activity) {
 	//getPixels(pixels, offset, stride, x, y, width, height)
 	getPixelsID = env->GetMethodID(bitmapClass, "getPixels", "([IIIIIII)V");
 	isnull("getPixelsID", getPixelsID);
-
 }
 
-void ResourceManager::destroy() {
-}
-
-int ResourceManager::loadImage(const char *path, int format) {
+int ResourceManager::loadImage(const char *path, Texture *tex, int format) {
 	LOGI("loading %s", path);
 	AAsset *asset = AAssetManager_open(assetManager, path, AASSET_MODE_UNKNOWN);
 	uint bufSize = AAsset_getLength(asset);
@@ -83,23 +80,14 @@ int ResourceManager::loadImage(const char *path, int format) {
 	}
 //todo
 
-	Texture *texture = new Texture();
-	texture->width = bitmapInfo.width;
-	texture->height = bitmapInfo.height;
-	texture->format = format;
-	texture->pixels = (char*)textureData;
+	tex->width = bitmapInfo.width;
+	tex->height = bitmapInfo.height;
+	tex->format = format;
+	tex->pixels = (char*)textureData;
 	lastTextureID++;
-	textures.insert(std::pair<uint,Texture*>(lastTextureID,texture));
+	textures.insert(std::pair<uint,Texture*>(lastTextureID,tex));
 	LOGI("loading %s is OK; format:%d", path, format);
 	return lastTextureID;
-}
-
-Texture* ResourceManager::getTexture(uint id) {
-	std::map<uint,Texture*>::iterator it = textures.find(id);
-	if (it!=textures.end())
-		return it->second;
-	LOGI("texture with id=%d not exist",id);
-	return 0;
 }
 
 char* ResourceManager::getBytes(const char *fileName, uint &length){
@@ -122,4 +110,68 @@ char* ResourceManager::getBytes(const char *fileName, uint &length){
 	return buffer;
 }
 
+#elif _WIN32
+#include <IL/il.h>
+bool ResourceManager::init(){
+  if (ilGetInteger(IL_VERSION_NUM) < IL_VERSION)
+  {
+    /* wrong DevIL version */
+    return false;
+  }
+  ilInit(); /* Initialization of DevIL */
+  return true;
+}
 
+int ResourceManager::loadImage(const char *path, Texture *tex, int format){
+  ilGenImages(1, (ILuint*)&tex->id);
+  ilBindImage(tex->id);
+  bool success = ilLoadImage((const ILstring)path) != 0;
+  if (success) {
+    //success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+    if (!success) {
+      LOGI("Error ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE)");
+      return false;
+    }
+    glGenTextures(1, &tex->texNameGl);
+    isglerr("err gen tex");
+    glBindTexture(GL_TEXTURE_2D, tex->texNameGl);
+    isglerr("err bind tex");
+    tex->format = format;
+    tex->width = ilGetInteger(IL_IMAGE_WIDTH);
+    tex->height = ilGetInteger(IL_IMAGE_HEIGHT);
+    tex->pixels = (char*)ilGetData();
+  } else {
+    LOGI("Error: ilLoadImage %s", path);
+    return 0;
+  }
+ 	lastTextureID++;
+	textures.insert(std::pair<uint,Texture*>(lastTextureID,tex));
+	LOGI("loading %s is OK; format:%d", path, format);
+	return lastTextureID;
+}
+
+#elif __linux__
+#endif
+
+Texture* ResourceManager::getTexture(uint id) {
+	std::map<uint,Texture*>::iterator it = textures.find(id);
+	if (it!=textures.end())
+		return it->second;
+	LOGI("texture with id=%d not exist",id);
+	return 0;
+}
+
+bool ResourceManager::freeData(int id){
+  Texture *t = getTexture(id);
+  if(t){
+    if(t->isGenTexNameGl)
+      glDeleteTextures(1, &t->texNameGl);
+#ifdef __ANDROID__
+    delete[] t->pixels;
+#elif defined(_WIN32) || defined(__linux__)
+    ilDeleteImages(1, (ILuint*)&t->id);
+#endif
+    return true;
+  }
+  return false;
+}

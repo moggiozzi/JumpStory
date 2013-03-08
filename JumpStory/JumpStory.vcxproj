@@ -42,6 +42,7 @@
     <NMakeOutput>$(ProjectDir)JumpStory-Debug.vgdbsettings</NMakeOutput>
     <NMakeForcedIncludes>$(VISUALGDB_DIR)\gcc_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
     <IncludePath>E:\Android\android-ndk-r8d\sources\android\native_app_glue;E:\Android\android-ndk-r8d\platforms\android-9\arch-arm\usr\include\android;E:\Android\android-ndk-r8d\platforms\android-9\arch-arm\usr\include;E:\Android\android-ndk-r8d\sources;E:\Android\android-ndk-r8d\sources\cxx-stl\stlport\stlport;</IncludePath>
+    <NMakePreprocessorDefinitions>__ANDROID__</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /build "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)" "/config:$(ConfigurationName)" "/platform:$(PlatformName)"</NMakeBuildCommandLine>
@@ -50,6 +51,7 @@
     <NMakeIncludeSearchPath>E:\Android\android-ndk-r8d\\platforms\android-9\arch-arm\usr\include;E:\Android\android-ndk-r8d\toolchains\arm-linux-androideabi-4.7\prebuilt\windows\lib\gcc\arm-linux-androideabi\4.7\include;E:\Android\android-ndk-r8d\toolchains\arm-linux-androideabi-4.7\prebuilt\windows\lib\gcc\arm-linux-androideabi\4.7\include-fixed;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <NMakeOutput>$(ProjectDir)JumpStory-Release.vgdbsettings</NMakeOutput>
     <NMakeForcedIncludes>$(VISUALGDB_DIR)\gcc_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
+    <NMakePreprocessorDefinitions>__ANDROID__</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
@@ -66,7 +68,7 @@
     <ClCompile Include="jni\Game.cpp" />
     <ClCompile Include="jni\GLHelper.cpp" />
     <ClCompile Include="jni\Global.cpp" />
-    <ClCompile Include="jni\jumpstory.cpp" />
+    <ClCompile Include="jni\main.cpp" />
     <ClCompile Include="jni\Menu.cpp" />
     <ClCompile Include="jni\ResourceManager.cpp" />
     <ClCompile Include="jni\Sprite.cpp" />

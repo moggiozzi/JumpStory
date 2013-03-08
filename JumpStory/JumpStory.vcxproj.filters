@@ -39,9 +39,6 @@
     <ClCompile Include="jni\Global.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="jni\jumpstory.cpp">
-      <Filter>Source files</Filter>
-    </ClCompile>
     <ClCompile Include="jni\Menu.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
@@ -58,6 +55,9 @@
       <Filter>Source files</Filter>
     </ClCompile>
     <ClCompile Include="jni\Character.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\main.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
