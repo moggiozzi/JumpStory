@@ -84,6 +84,11 @@ int ResourceManager::loadImage(const char *path, Texture *tex, int format) {
   tex->height = bitmapInfo.height;
   tex->format = format;
   tex->pixels = (char*)textureData;
+  glGenTextures(1, &tex->texNameGl);
+  glBindTexture(GL_TEXTURE_2D, tex->texNameGl);
+  glTexImage2D(GL_TEXTURE_2D, 0, tex->format, tex->width, tex->height, 0,
+    tex->format, GL_UNSIGNED_BYTE, tex->pixels);
+  isglerr("Error glTexImage2d");
   lastTextureID++;
   textures.insert(std::pair<uint,Texture*>(lastTextureID,tex));
   LOGI("loading %s is OK; format:%d", path, format);
@@ -132,14 +137,15 @@ int ResourceManager::loadImage(const char *path, Texture *tex, int format){
       LOGI("Error ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE)");
       return false;
     }
-    glGenTextures(1, &tex->texNameGl);
-    isglerr("err gen tex");
-    glBindTexture(GL_TEXTURE_2D, tex->texNameGl);
-    isglerr("err bind tex");
     tex->format = format;
     tex->width = ilGetInteger(IL_IMAGE_WIDTH);
     tex->height = ilGetInteger(IL_IMAGE_HEIGHT);
     tex->pixels = (char*)ilGetData();
+    glGenTextures(1, &tex->texNameGl);
+    glBindTexture(GL_TEXTURE_2D, tex->texNameGl);
+    glTexImage2D(GL_TEXTURE_2D, 0, tex->format, tex->width, tex->height, 0,
+      tex->format, GL_UNSIGNED_BYTE, tex->pixels);
+    isglerr("Err glTexImage2D");
   } else {
     LOGI("Error: ilLoadImage %s", path);
     return 0;

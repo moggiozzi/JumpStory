@@ -69,6 +69,7 @@
     <ClCompile Include="jni\Game.cpp" />
     <ClCompile Include="jni\GLHelper.cpp" />
     <ClCompile Include="jni\Global.cpp" />
+    <ClCompile Include="jni\Helper.cpp" />
     <ClCompile Include="jni\main.cpp" />
     <ClCompile Include="jni\Menu.cpp" />
     <ClCompile Include="jni\ResourceManager.cpp" />

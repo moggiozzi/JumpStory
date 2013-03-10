@@ -3,18 +3,23 @@
 
 #include "GLHelper.h"
 #include "CollisionLayer.h"
+#include "Character.h"
 
 class World{
-  double g;
-  //Vector2<> size;
-  //Rect<int> viewPort;
+  float g;
+  Vector2 bottomLeft; // координаты нижней левой точки с которой надо рисовать "мир"
   CollisionLayer collisionLayer;
+  Character *character;
+
+  Vector2f charPos,charSpeed,charMaxSpeed,worldSpeed;
 public:
-  World():g(9.81){}
+  World(){}
   //Vector2f getSize(){return size;}
   void init();
   void draw();
-  void update(double dt);
+  void update(float dt);
+  void keyDown(uint keyCode);
+  void touch(int x, int y);
 };
 
 #endif // WORLD_H_

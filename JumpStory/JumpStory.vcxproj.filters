@@ -60,6 +60,9 @@
     <ClCompile Include="jni\main.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="jni\Helper.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="jni\Game.h">

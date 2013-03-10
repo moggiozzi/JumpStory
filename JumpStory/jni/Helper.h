@@ -2,7 +2,20 @@
 #define HELPER_H_
 
 #include "Global.h"
+#include <algorithm>
 
+#ifdef __ANDROID__
+//todo
+//#define AKEYCODE_DPAD_LEFT 21
+//#define AKEYCODE_DPAD_RIGHT 22
+
+#define VK_LEFT           0x25
+#define VK_RIGHT          0x27
+#endif
+
+struct Vector2f{
+  float x,y;
+};
 struct Vector2{
   int x,y;
 };
@@ -51,8 +64,8 @@ struct Texture {
 #if !defined(__ANDROID__)
   int id; // id for DevIL data
 #endif
-  uint width;
-  uint height;
+  int width;
+  int height;
   uint format;
   /// флаг генерации GL текстуры
   bool isGenTexNameGl;
@@ -60,6 +73,34 @@ struct Texture {
   uint texNameGl;
   char *pixels;
   Texture(): isGenTexNameGl(false), pixels(0) {}
+};
+
+class FPS{
+#define maxSpansCnt 100
+  float spans[maxSpansCnt];
+  uint currentSpanIdx;
+  uint currentSpanCnt;
+public:
+  FPS():currentSpanIdx(0),currentSpanCnt(0){
+    for(uint i=0;i<maxSpansCnt;i++){
+      spans[i]=0;
+    }
+  }
+  void add(float span){
+    spans[currentSpanIdx]=span;
+    currentSpanIdx=(currentSpanIdx+1)%maxSpansCnt;
+    if(currentSpanCnt<maxSpansCnt)
+      currentSpanCnt++;
+  }
+  uint getFps(){
+    float sum = 0;
+    for(uint i=0;i<currentSpanCnt;i++)
+      sum+=spans[i];
+    if(sum>0)
+      return static_cast<uint>(currentSpanCnt/sum);
+    else
+      return 0;
+  }
 };
 
 #endif

@@ -1,6 +1,9 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+extern float worldX;
+extern float worldY;
+
 #ifdef __ANDROID__
 #include <jni.h>
 #include <android_native_app_glue.h>

@@ -31,9 +31,10 @@ static int32_t engine_handle_input(struct android_app* app, AInputEvent* event) 
   struct engine* engine = (struct engine*)app->userData;
   if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION &&
     AMotionEvent_getAction(event) == AMOTION_EVENT_ACTION_DOWN) {
-      //engine->state.x = AMotionEvent_getX(event, 0);
-      //engine->state.y = AMotionEvent_getY(event, 0);
-      //game.touch(engine->state.x, engine->state.y);
+      float x = AMotionEvent_getX(event, 0);
+      float y = AMotionEvent_getY(event, 0);
+      game->touch(x,y);
+      engine->animating = 1;
       return 1;
   }
   return 0;
@@ -117,18 +118,15 @@ void android_main(struct android_app* state) {
     int ident;
     int events;
     struct android_poll_source* source;
-
     // If not animating, we will block forever waiting for events.
     // If animating, we loop until all events are read, then continue
     // to draw the next frame of animation.
     while ((ident=ALooper_pollAll(engine.animating ? 0 : -1, NULL, &events,
       (void**)&source)) >= 0) {
-
         // Process this event.
         if (source != NULL) {
           source->process(state, source);
         }
-
         // If a sensor has data, process it now.
         if (ident == LOOPER_ID_USER) {
           if (engine.accelerometerSensor != NULL) {
@@ -141,7 +139,6 @@ void android_main(struct android_app* state) {
             }
           }
         }
-
         if (state->destroyRequested != 0) {
           //engine_term_display(&engine);
           return;
@@ -150,7 +147,7 @@ void android_main(struct android_app* state) {
 
     if (engine.animating) {
       currentTime = clock();
-      //game->doStep((float)(currentTime-lastTime)/CLOCKS_PER_SEC);
+      game->update((float)(currentTime-lastTime)/CLOCKS_PER_SEC);
       game->draw();
       lastTime = currentTime;
     }
@@ -202,6 +199,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                            DispatchMessage( &msg );
                          }
                        } else {
+                         // Sleep(300); // for test
                          currentTime = clock();
                          // update
                          game->update((float)(currentTime-lastTime)/CLOCKS_PER_SEC);
@@ -226,13 +224,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam){
     return 0;
   case WM_DESTROY:
     return 0;
-  case WM_KEYDOWN:
-    switch ( wParam ){
-    case VK_ESCAPE:
+  case WM_KEYDOWN: {
+    if (wParam==VK_ESCAPE) {
       PostQuitMessage(0);
-      return 0;
+    } else {
+      game->keyDown(wParam);
     }
     return 0;
+  }
   default:
     return DefWindowProc( hWnd, message, wParam, lParam );
   }

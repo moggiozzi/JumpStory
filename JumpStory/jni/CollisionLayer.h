@@ -8,7 +8,7 @@ class CollisionLayer{
   std::vector<Segment> segments;
 public:
   CollisionLayer();
-  bool isIntersect(const Point& p1, const Point& p2);
+  bool isIntersect(float x1, float y1, float x2, float y2, float w=0);
   void draw();
   void generate();
 };

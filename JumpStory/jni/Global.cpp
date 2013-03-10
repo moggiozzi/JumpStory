@@ -1,5 +1,8 @@
 #include "Global.h"
 
+  float worldX;
+  float worldY;
+
 #ifdef __ANDROID__
 #elif _WIN32
 #ifdef _DEBUG
@@ -15,6 +18,7 @@ void LogMessage ( char* format, ...) {
   vsprintf ( buf, format, args );
   va_end ( args );
   OutputDebugString ( buf );
+  OutputDebugString ( "\n" );
 }
 #else
 #define LOGI(...)

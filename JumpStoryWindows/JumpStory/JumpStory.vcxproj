@@ -71,6 +71,7 @@
     <ClCompile Include="..\..\JumpStory\jni\Game.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\GLHelper.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\Global.cpp" />
+    <ClCompile Include="..\..\JumpStory\jni\Helper.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\main.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\Menu.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\ResourceManager.cpp" />
