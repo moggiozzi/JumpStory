@@ -154,88 +154,96 @@ void android_main(struct android_app* state) {
   }
 }
 #elif _WIN32
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, 
-                   LPSTR lpCmdLine, int iCmdShow){
-                     WNDCLASS wc;
-                     HWND hWnd;
-                     MSG msg;
-                     BOOL quit = FALSE;
-                     float theta = 0.0f;
-                     // register window class
-                     wc.style = CS_OWNDC;
-                     wc.lpfnWndProc = WndProc;
-                     wc.cbClsExtra = 0;
-                     wc.cbWndExtra = 0;
-                     wc.hInstance = hInstance;
-                     wc.hIcon = LoadIcon( NULL, IDI_APPLICATION );
-                     wc.hCursor = LoadCursor( NULL, IDC_ARROW );
-                     wc.hbrBackground = (HBRUSH)GetStockObject( BLACK_BRUSH );
-                     wc.lpszMenuName = NULL;
-                     wc.lpszClassName = "JumpStory";
-                     RegisterClass( &wc );
-                     // create main window
-                     hWnd = CreateWindow( 
-                       "JumpStory", "JumpStory", 
-                       WS_CAPTION | WS_POPUPWINDOW | WS_VISIBLE,
-                       400, 100, // window coords 
-                       320, 480, // GLHelper::getWidth(), GLHelper::getHeight(), // window size
-                       NULL, NULL, hInstance, NULL );
-                     // enable OpenGL for the window
-                     ResourceManager::init();
-                     GLHelper::init( hWnd );
-                     game = new Game();
-                     currentTime = lastTime = clock();
-                     // program main loop
-                     while ( !quit )	{
-                       // check for messages
-                       if ( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE )  ){
-                         // handle or dispatch messages
-                         if ( msg.message == WM_QUIT ) {
-                           quit = TRUE;
-                         } else {
-                           TranslateMessage( &msg );
-                           DispatchMessage( &msg );
-                         }
-                       } else {
-                         // Sleep(300); // for test
-                         currentTime = clock();
-                         // update
-                         game->update((float)(currentTime-lastTime)/CLOCKS_PER_SEC);
-                         lastTime = currentTime;
-                         // draw
-                         game->draw();
-                       }
-                     }
-                     // shutdown OpenGL
-                     GLHelper::terminate();
-                     // destroy the window explicitly
-                     DestroyWindow( hWnd );
-                     return msg.wParam;
-}
+#include <GL/freeglut.h>
+int nWindow;
+int nLoopMain = 0;
+int nPosX, nPosY;
+int nWidth, nHeight;
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam){
-  switch (message) {
-  case WM_CREATE:
-    return 0;
-  case WM_CLOSE:
-    PostQuitMessage( 0 );
-    return 0;
-  case WM_DESTROY:
-    return 0;
-  case WM_KEYDOWN: {
-    if (wParam==VK_ESCAPE) {
-      PostQuitMessage(0);
-    } else {
-      game->keyDown(wParam);
-    }
-    return 0;
+void handleInput( unsigned char cChar, int nMouseX, int nMouseY )
+{
+  game->keyDown( cChar );
+  if (cChar == 27)
+    glutLeaveMainLoop();
+  else if (cChar=='f')
+  {
+    printf("main window toggle fullscreen\n");
+    glutFullScreenToggle();
   }
-  default:
-    return DefWindowProc( hWnd, message, wParam, lParam );
+  else if (cChar=='r')
+  {
+    printf("main window resize\n");
+    if (nWidth<400)
+      glutReshapeWindow(600,300);
+    else
+      glutReshapeWindow(300,300);
+  }
+  else if (cChar=='m')
+  {
+    printf("main window position\n");
+    /* The window position you request is the outer top-left of the window,
+    * the client area is at a different position if the window has borders
+    * and/or a title bar.
+    */
+    if (nPosX<400)
+      glutPositionWindow(600,300);
+    else
+      glutPositionWindow(300,300);
   }
 }
 
+void Idle(void)
+{
+  glutPostRedisplay();
+}
+
+void handleReshape(int x, int y)
+{
+  nWidth = glutGet(GLUT_WINDOW_WIDTH);
+  nHeight = glutGet(GLUT_WINDOW_HEIGHT);
+
+  //glViewport(0,0,nWidth,nHeight);
+  //glMatrixMode(GL_PROJECTION);
+  //glLoadIdentity();
+  //gluOrtho2D(0,nWidth,0,nHeight);
+}
+
+void draw(void)
+{
+  // todo сделать вне функции draw с помощью glutTimerFunc
+  // Sleep(300); // for test
+  currentTime = clock();
+  // update
+  game->update((float)(currentTime-lastTime)/CLOCKS_PER_SEC);
+  lastTime = currentTime;
+
+  game->draw();
+}
+
+int main(int argc, char* argv[])
+{
+  glutInit( &argc, argv );
+  glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE | GLUT_BORDERLESS);
+  glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+
+  glutInitWindowPosition(400,100);
+  glutInitWindowSize(320,480);
+
+  nWindow = glutCreateWindow("JumpStory");
+
+  glutKeyboardFunc( handleInput );
+  glutDisplayFunc( draw );
+  glutReshapeFunc( handleReshape );
+
+  ResourceManager::init();
+  GLHelper::init();
+  game = new Game();
+
+  currentTime = lastTime = clock();
+  glutMainLoop();
+
+  return 0;
+}
 #elif __linux__
 #endif

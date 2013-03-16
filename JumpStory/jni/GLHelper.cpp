@@ -74,39 +74,15 @@ void GLHelper::terminate(){
 }
 
 #elif _WIN32
+
+#include <GL/freeglut.h>
+
 int GLHelper::width=320;
 int GLHelper::height=480;
-HWND GLHelper::hWnd;
-HDC GLHelper::hDC;
-HGLRC GLHelper::hRC;
-bool GLHelper::init(HWND hWnd) {
-  PIXELFORMATDESCRIPTOR pfd;
-  int format;
-  // get the device context (DC)
-  hDC = GetDC( hWnd );
-  // set the pixel format for the DC
-  ZeroMemory( &pfd, sizeof( pfd ) );
-  pfd.nSize = sizeof( pfd );
-  pfd.nVersion = 1;
-  pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-  pfd.iPixelType = PFD_TYPE_RGBA;
-  pfd.cColorBits = 24;
-  pfd.cDepthBits = 16;
-  pfd.iLayerType = PFD_MAIN_PLANE;
-  format = ChoosePixelFormat( hDC, &pfd );
-  SetPixelFormat( hDC, format, &pfd );
-  // create and enable the render context (RC)
-  hRC = wglCreateContext( hDC );
-  wglMakeCurrent( hDC, hRC );
+bool GLHelper::init() {
   setParams();
   ResourceManager::loadImage("font.png",&fontTexture);
   return true;
-}
-
-void GLHelper::terminate() {
-  wglMakeCurrent( NULL, NULL );
-  wglDeleteContext( hRC );
-  ReleaseDC( hWnd, hDC );
 }
 
 #elif __linux__
@@ -115,7 +91,8 @@ void GLHelper::swapBuffers(){
 #ifdef __ANDROID__
   eglSwapBuffers(GLHelper::display, GLHelper::surface);
 #elif _WIN32
-  SwapBuffers( hDC );
+  glutSwapBuffers();
+  glutPostRedisplay(); // ???
 #elif __linux__
 #endif
 }

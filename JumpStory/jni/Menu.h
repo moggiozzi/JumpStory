@@ -2,7 +2,9 @@
 #define MENU_H_
 
 class Menu{
-
+public:
+  void draw();
+  void touch();
 };
 
 #endif

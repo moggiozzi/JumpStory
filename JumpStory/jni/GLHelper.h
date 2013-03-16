@@ -31,10 +31,7 @@ public:
   static EGLContext context;
   static bool init(ANativeWindow* window);
 #elif _WIN32
-  static HWND hWnd;
-  static HDC hDC;
-  static HGLRC hRC;
-  static bool init(HWND hWnd);
+  static bool init();
 #elif __linux__
 #endif
 

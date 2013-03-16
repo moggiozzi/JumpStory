@@ -39,8 +39,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)\..\DevIL-SDK-x86-1.7.8\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\..\DevIL-SDK-x86-1.7.8\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\..\DevIL-SDK-x86-1.7.8\include;$(SolutionDir)\..\freeglut-2.8.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\..\DevIL-SDK-x86-1.7.8\lib;$(SolutionDir)\..\freeglut-2.8.0\lib\Debug;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SolutionDir)\..\DevIL-SDK-x86-1.7.8\include;$(SolutionDir)\..\freeglut-2.8.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\..\DevIL-SDK-x86-1.7.8\lib;$(SolutionDir)\..\freeglut-2.8.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -49,7 +53,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;DevIL.lib;ILU.lib;ILUT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freeglut.lib;DevIL.lib;ILU.lib;ILUT.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -63,6 +67,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>freeglut.lib;DevIL.lib;ILU.lib;ILUT.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
