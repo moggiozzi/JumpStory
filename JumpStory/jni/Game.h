@@ -3,6 +3,9 @@
 
 #include "Global.h"
 #include "World.h"
+enum GameState{
+  S_MENU, S_INGAME, S_GAMEOVER, S_PAUSE,
+};
 
 class Game{
   World world;

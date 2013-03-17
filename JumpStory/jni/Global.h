@@ -1,8 +1,11 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+extern int maxJumpHeight;
 extern float worldX;
 extern float worldY;
+int worldToDeviceX(float x);
+int worldToDeviceY(float y);
 
 #ifdef __ANDROID__
 #include <jni.h>

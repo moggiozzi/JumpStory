@@ -5,5 +5,5 @@ Character::Character(Texture *charTex){
 }
 
 void Character::draw(){
-  sprite->draw(pos.x - worldX,GLHelper::getHeight() - (pos.y - worldY));
+  sprite->draw( (int) (pos.x - worldX), (int) (GLHelper::getHeight() - (pos.y - worldY)));
 }

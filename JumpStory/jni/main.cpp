@@ -85,8 +85,8 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
 void android_main(struct android_app* state) {
 #ifndef NDEBUG
   // ожидание подключения отладчика
-  //volatile bool bGo = false; // поймать
-  volatile bool bGo = true; // не ловить
+  volatile bool bGo = false; // поймать
+  //volatile bool bGo = true; // не ловить
   while(!bGo) {
     sleep(1);
   }
@@ -158,39 +158,18 @@ void android_main(struct android_app* state) {
 #include <GL/freeglut.h>
 int nWindow;
 int nLoopMain = 0;
-int nPosX, nPosY;
-int nWidth, nHeight;
 
-void handleInput( unsigned char cChar, int nMouseX, int nMouseY )
+void handleInput( int keyCode, int mouseX, int mouseY ) {
+  game->keyDown( keyCode );
+}
+
+void handleInput( unsigned char keyCode, int mouseX, int mouseY )
 {
-  game->keyDown( cChar );
-  if (cChar == 27)
+  game->keyDown( keyCode );
+  if (keyCode == 27)
     glutLeaveMainLoop();
-  else if (cChar=='f')
-  {
-    printf("main window toggle fullscreen\n");
+  else if (keyCode=='f')
     glutFullScreenToggle();
-  }
-  else if (cChar=='r')
-  {
-    printf("main window resize\n");
-    if (nWidth<400)
-      glutReshapeWindow(600,300);
-    else
-      glutReshapeWindow(300,300);
-  }
-  else if (cChar=='m')
-  {
-    printf("main window position\n");
-    /* The window position you request is the outer top-left of the window,
-    * the client area is at a different position if the window has borders
-    * and/or a title bar.
-    */
-    if (nPosX<400)
-      glutPositionWindow(600,300);
-    else
-      glutPositionWindow(300,300);
-  }
 }
 
 void Idle(void)
@@ -200,9 +179,8 @@ void Idle(void)
 
 void handleReshape(int x, int y)
 {
-  nWidth = glutGet(GLUT_WINDOW_WIDTH);
-  nHeight = glutGet(GLUT_WINDOW_HEIGHT);
-
+  //nWidth = glutGet(GLUT_WINDOW_WIDTH);
+  //nHeight = glutGet(GLUT_WINDOW_HEIGHT);
   //glViewport(0,0,nWidth,nHeight);
   //glMatrixMode(GL_PROJECTION);
   //glLoadIdentity();
@@ -212,7 +190,7 @@ void handleReshape(int x, int y)
 void draw(void)
 {
   // todo сделать вне функции draw с помощью glutTimerFunc
-  // Sleep(300); // for test
+  //Sleep(300); // for test
   currentTime = clock();
   // update
   game->update((float)(currentTime-lastTime)/CLOCKS_PER_SEC);
@@ -233,8 +211,11 @@ int main(int argc, char* argv[])
   nWindow = glutCreateWindow("JumpStory");
 
   glutKeyboardFunc( handleInput );
+  glutSpecialFunc( handleInput );
   glutDisplayFunc( draw );
   glutReshapeFunc( handleReshape );
+
+  srand((uint)time(NULL));
 
   ResourceManager::init();
   GLHelper::init();

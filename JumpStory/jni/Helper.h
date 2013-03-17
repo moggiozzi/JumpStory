@@ -5,14 +5,15 @@
 #include <algorithm>
 
 #ifdef __ANDROID__
-//todo
-//#define AKEYCODE_DPAD_LEFT 21
-//#define AKEYCODE_DPAD_RIGHT 22
-
-#define VK_LEFT           0x25
-#define VK_RIGHT          0x27
+#define KEY_LEFT  AKEYCODE_DPAD_LEFT
+#define KEY_RIGHT AKEYCODE_DPAD_RIGHT
+#else
+#include <GL/freeglut.h>
+#define KEY_LEFT  GLUT_KEY_LEFT
+#define KEY_RIGHT GLUT_KEY_RIGHT
 #endif
 
+// todo  через шаблон
 struct Vector2f{
   float x,y;
 };
@@ -38,7 +39,14 @@ struct Segment{
     x1(_x1),y1(_y1),x2(_x2),y2(_y2){}
   Segment(const Vector2 &_p1, const Vector2 &_p2):
     x1(_p1.x),y1(_p1.y),x2(_p2.x),y2(_p2.y){}
+  int getWidth(){return abs(x2-x1);}
 };
+bool cmpY(Segment& s1, Segment& s2);
+
+double getDistSqr(Vector2 p1, Vector2 p2);
+double getDist(Vector2 p1, Vector2 p2);
+double getDist(Vector2 p1, Segment s1);
+double getDist(Segment& s1, Segment& s2);
 
 struct Rect{
   //	T x, y, w, h;

@@ -52,7 +52,7 @@ bool GLHelper::init(ANativeWindow* window){
   eglQuerySurface(display, surface, EGL_HEIGHT, &h);
   width  = w;
   height = h;
-  ResourceManager::loadImage("font.png",&fontTexture);
+  ResourceManager::loadImage("res/font.png",&fontTexture);
   setParams();
   return true;
 }
@@ -81,7 +81,7 @@ int GLHelper::width=320;
 int GLHelper::height=480;
 bool GLHelper::init() {
   setParams();
-  ResourceManager::loadImage("font.png",&fontTexture);
+  ResourceManager::loadImage("res/font.png",&fontTexture);
   return true;
 }
 

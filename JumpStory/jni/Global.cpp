@@ -1,7 +1,15 @@
 #include "Global.h"
+#include "GLHelper.h"
 
-  float worldX;
-  float worldY;
+float worldX;
+float worldY;
+int maxJumpHeight;
+int worldToDeviceX(float x){
+  return (int)(x-worldX);
+}
+int worldToDeviceY(float y){
+  return (int)(GLHelper::getHeight()-(y-worldY));
+}
 
 #ifdef __ANDROID__
 #elif _WIN32

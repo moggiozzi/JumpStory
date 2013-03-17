@@ -11,7 +11,7 @@ class World{
   CollisionLayer collisionLayer;
   Character *character;
 
-  Vector2f charPos,charSpeed,charMaxSpeed,worldSpeed;
+  Vector2f charPos, charSpeed, charMaxSpeed, worldSpeed;
 public:
   World(){}
   //Vector2f getSize(){return size;}
