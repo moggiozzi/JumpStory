@@ -39,8 +39,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)\..\DevIL-SDK-x86-1.7.8\include;$(SolutionDir)\..\freeglut-2.8.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\..\DevIL-SDK-x86-1.7.8\lib;$(SolutionDir)\..\freeglut-2.8.0\lib\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\..\DevIL-SDK-x86-1.7.8\include;$(SolutionDir)\..\freeglut-2.8.0\include;$(SolutionDir)\..\OpenAL\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\..\DevIL-SDK-x86-1.7.8\lib;$(SolutionDir)\..\freeglut-2.8.0\lib\Debug;$(SolutionDir)\..\OpenAL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)\..\DevIL-SDK-x86-1.7.8\include;$(SolutionDir)\..\freeglut-2.8.0\include;$(IncludePath)</IncludePath>
@@ -50,10 +50,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>freeglut.lib;DevIL.lib;ILU.lib;ILUT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>alut.lib;OpenAL32.lib;ogg.lib;vorbisfile.lib;freeglut.lib;DevIL.lib;ILU.lib;ILUT.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -71,6 +72,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\JumpStory\jni\AudioHelper.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\Character.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\CollisionLayer.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\Game.cpp" />
@@ -80,10 +82,12 @@
     <ClCompile Include="..\..\JumpStory\jni\main.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\Menu.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\ResourceManager.cpp" />
+    <ClCompile Include="..\..\JumpStory\jni\Sound.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\Sprite.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\JumpStory\jni\AudioHelper.h" />
     <ClInclude Include="..\..\JumpStory\jni\Character.h" />
     <ClInclude Include="..\..\JumpStory\jni\CollisionLayer.h" />
     <ClInclude Include="..\..\JumpStory\jni\Game.h" />
@@ -92,6 +96,7 @@
     <ClInclude Include="..\..\JumpStory\jni\Helper.h" />
     <ClInclude Include="..\..\JumpStory\jni\Menu.h" />
     <ClInclude Include="..\..\JumpStory\jni\ResourceManager.h" />
+    <ClInclude Include="..\..\JumpStory\jni\Sound.h" />
     <ClInclude Include="..\..\JumpStory\jni\Sprite.h" />
     <ClInclude Include="..\..\JumpStory\jni\World.h" />
   </ItemGroup>

@@ -1,15 +1,19 @@
 #include "World.h"
 #include "ResourceManager.h"
+#include "AudioHelper.h"
 
 namespace{
   Texture charTex,platTex,bgTex,ghostTex;
   Vector2f ghostPos;
 }
 
+int jumpSoundId;
+
 void World::init(){
   ResourceManager::loadImage("res/character.png",&charTex);
   ResourceManager::loadImage("res/bg.png",&bgTex);
   ResourceManager::loadImage("res/ghost.png",&ghostTex);
+  AudioHelper::open("res/jump.ogg", jumpSoundId, false);
   character = new Character(&charTex);
   character->setPos(50.0f,50.0f+character->getHeight());
   charPos.x = 50.0f;
@@ -62,6 +66,7 @@ void World::update(float dt){
     charSpeed.y = charMaxSpeed.y;
     charPos.x = charPos.x+charSpeed.x*dt;
     charPos.y = charPos.y+charSpeed.y*dt;
+    AudioHelper::play(jumpSoundId);
   }else{
     charPos.x = nx;
     charPos.y = ny;

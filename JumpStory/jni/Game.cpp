@@ -2,6 +2,7 @@
 
 #include "GLHelper.h"
 #include "ResourceManager.h"
+#include "AudioHelper.h"
 
 Game::Game(){
   world.init();

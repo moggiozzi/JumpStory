@@ -8,6 +8,7 @@
 #include "Game.h"
 #include "ResourceManager.h"
 #include "GLHelper.h"
+#include "AudioHelper.h"
 
 clock_t lastTime=0, currentTime=0;
 
@@ -52,6 +53,7 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
     if (engine->app->window != NULL) {
       ResourceManager::init(engine->app->activity);
       GLHelper::init(engine->app->window);
+      AudioHelper::init(engine->app->activity);
       game = new Game();
       game->draw();
     }
@@ -85,8 +87,8 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
 void android_main(struct android_app* state) {
 #ifndef NDEBUG
   // ожидание подключения отладчика
-  volatile bool bGo = false; // поймать
-  //volatile bool bGo = true; // не ловить
+  //volatile bool bGo = false; // поймать
+  volatile bool bGo = true; // не ловить
   while(!bGo) {
     sleep(1);
   }
@@ -193,6 +195,7 @@ void draw(void)
   //Sleep(300); // for test
   currentTime = clock();
   // update
+  AudioHelper::update();
   game->update((float)(currentTime-lastTime)/CLOCKS_PER_SEC);
   lastTime = currentTime;
 
@@ -219,6 +222,8 @@ int main(int argc, char* argv[])
 
   ResourceManager::init();
   GLHelper::init();
+  AudioHelper::init();
+
   game = new Game();
 
   currentTime = lastTime = clock();

@@ -64,6 +64,7 @@
     <None Include="jni\Application.mk" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="jni\AudioHelper.cpp" />
     <ClCompile Include="jni\Character.cpp" />
     <ClCompile Include="jni\CollisionLayer.cpp" />
     <ClCompile Include="jni\Game.cpp" />
@@ -73,10 +74,12 @@
     <ClCompile Include="jni\main.cpp" />
     <ClCompile Include="jni\Menu.cpp" />
     <ClCompile Include="jni\ResourceManager.cpp" />
+    <ClCompile Include="jni\Sound.cpp" />
     <ClCompile Include="jni\Sprite.cpp" />
     <ClCompile Include="jni\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="jni\AudioHelper.h" />
     <ClInclude Include="jni\Character.h" />
     <ClInclude Include="jni\CollisionLayer.h" />
     <ClInclude Include="jni\Game.h" />
@@ -85,6 +88,7 @@
     <ClInclude Include="jni\Helper.h" />
     <ClInclude Include="jni\Menu.h" />
     <ClInclude Include="jni\ResourceManager.h" />
+    <ClInclude Include="jni\Sound.h" />
     <ClInclude Include="jni\Sprite.h" />
     <ClInclude Include="jni\World.h" />
   </ItemGroup>

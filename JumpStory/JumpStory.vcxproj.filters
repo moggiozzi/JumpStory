@@ -63,6 +63,12 @@
     <ClCompile Include="jni\Helper.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="jni\AudioHelper.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\Sound.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="jni\Game.h">
@@ -93,6 +99,12 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="jni\Character.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\AudioHelper.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\Sound.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
