@@ -76,6 +76,7 @@
     <ClCompile Include="..\..\JumpStory\jni\Character.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\CollisionLayer.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\Game.cpp" />
+    <ClCompile Include="..\..\JumpStory\jni\GameState.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\GLHelper.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\Global.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\Helper.cpp" />
@@ -91,6 +92,7 @@
     <ClInclude Include="..\..\JumpStory\jni\Character.h" />
     <ClInclude Include="..\..\JumpStory\jni\CollisionLayer.h" />
     <ClInclude Include="..\..\JumpStory\jni\Game.h" />
+    <ClInclude Include="..\..\JumpStory\jni\GameState.h" />
     <ClInclude Include="..\..\JumpStory\jni\GLHelper.h" />
     <ClInclude Include="..\..\JumpStory\jni\Global.h" />
     <ClInclude Include="..\..\JumpStory\jni\Helper.h" />

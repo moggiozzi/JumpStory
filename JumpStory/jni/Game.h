@@ -3,13 +3,14 @@
 
 #include "Global.h"
 #include "World.h"
-enum GameState{
-  S_MENU, S_INGAME, S_GAMEOVER, S_PAUSE,
-};
+#include "Menu.h"
+#include "GameState.h"
 
 class Game{
   World world;
+  Menu menu;
   FPS fps;
+  void drawFps();
 public:
   Game();
   void draw();

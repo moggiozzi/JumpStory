@@ -68,6 +68,7 @@
     <ClCompile Include="jni\Character.cpp" />
     <ClCompile Include="jni\CollisionLayer.cpp" />
     <ClCompile Include="jni\Game.cpp" />
+    <ClCompile Include="jni\GameState.cpp" />
     <ClCompile Include="jni\GLHelper.cpp" />
     <ClCompile Include="jni\Global.cpp" />
     <ClCompile Include="jni\Helper.cpp" />
@@ -83,6 +84,7 @@
     <ClInclude Include="jni\Character.h" />
     <ClInclude Include="jni\CollisionLayer.h" />
     <ClInclude Include="jni\Game.h" />
+    <ClInclude Include="jni\GameState.h" />
     <ClInclude Include="jni\GLHelper.h" />
     <ClInclude Include="jni\Global.h" />
     <ClInclude Include="jni\Helper.h" />

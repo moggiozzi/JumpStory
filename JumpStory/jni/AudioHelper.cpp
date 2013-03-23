@@ -3,6 +3,7 @@
 
 Sounds AudioHelper::sounds;
 int AudioHelper::lastSoundId=0;
+bool AudioHelper::isInit=false;
 
 #ifdef __ANDROID__
 #include <assert.h>
@@ -36,7 +37,8 @@ bool AudioHelper::init(ANativeActivity* activity){
   // realize the output mix
   result = (*outputMixObject)->Realize(outputMixObject, SL_BOOLEAN_FALSE);
   assert(SL_RESULT_SUCCESS == result);
-  return true;
+  isInit = true;
+  return isInit;
 }
 
 // create asset audio player
@@ -84,6 +86,8 @@ SLObjectItf AudioHelper::createAssetAudioPlayer(const char * fileName)
 }
 
 bool AudioHelper::open(const char *file, int& soundId, bool isStreamed){
+  if (!isInit)
+    return false;
 	SLObjectItf fdPlayerObject = createAssetAudioPlayer(file);
   if(fdPlayerObject != NULL){
     soundId = lastSoundId;
@@ -92,6 +96,8 @@ bool AudioHelper::open(const char *file, int& soundId, bool isStreamed){
 }
 
 void AudioHelper::play(int soundId, bool isLoop){
+  if (!isInit)
+    return;
 	SLresult result;
 	SLObjectItf fdPlayerObject;
 	SLPlayItf fdPlayerPlay;
@@ -106,6 +112,8 @@ void AudioHelper::play(int soundId, bool isLoop){
 }
 
 void AudioHelper::stop(int soundId){
+  if (!isInit)
+    return;
 	SLresult result;
 	SLObjectItf fdPlayerObject;
 	SLPlayItf fdPlayerPlay;

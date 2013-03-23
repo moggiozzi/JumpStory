@@ -51,6 +51,7 @@ public:
   static void drawTriangle2d(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GLfloat x3, GLfloat y3);
   static void drawTexture(Texture* texture, int dx, int dy, int dw=-1, int dh=-1,
     int tx=0, int ty=0, int tw=-1, int th=-1);
+  static void drawTexture(Texture* texture, Rect &dr);
   static void drawText(int x, int y, const char* text, uint size=16);
 };
 

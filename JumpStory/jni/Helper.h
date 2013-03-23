@@ -5,10 +5,12 @@
 #include <algorithm>
 
 #ifdef __ANDROID__
+#define KEY_ESC   AKEYCODE_BACK
 #define KEY_LEFT  AKEYCODE_DPAD_LEFT
 #define KEY_RIGHT AKEYCODE_DPAD_RIGHT
 #else
 #include <GL/freeglut.h>
+#define KEY_ESC   27
 #define KEY_LEFT  GLUT_KEY_LEFT
 #define KEY_RIGHT GLUT_KEY_RIGHT
 #endif
@@ -59,21 +61,34 @@ struct Rect{
     };
   };
   union {
-    int size;
+    Vector2 size;
     struct {
-      int w, h;
+      int width, height;
     };
   };
   Rect( int _x=0, int _y=0, int _w=0, int _h=0 ) :
-    x(_x), y(_y), w(_w), h(_h) { }
+    x(_x), y(_y), width(_w), height(_h) { }
+  int getTop();
+  int getBottom();
+  int getLeft();
+  int getRight();
+  bool isContain( int x, int y );
+  bool isContain( Vector2 &point );
 };
+
 
 struct Texture {
 #if !defined(__ANDROID__)
   int id; // id for DevIL data
 #endif
-  int width;
-  int height;
+  union 
+  {
+    Vector2 size;
+    struct{
+      int width;
+      int height;
+    };
+  };
   uint format;
   /// флаг генерации GL текстуры
   bool isGenTexNameGl;

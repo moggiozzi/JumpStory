@@ -15,6 +15,7 @@ typedef std::map<int,Sound*> Sounds;
 #endif
 
 class AudioHelper{
+  static bool isInit;
 	static Sounds sounds;
   static int lastSoundId;
 #ifdef __ANDROID__
@@ -28,6 +29,7 @@ class AudioHelper{
 #elif _WIN32
   static Sound *getSound(int soundId);
 #endif
+
 public:
 #ifdef __ANDROID__
   static bool init(ANativeActivity* activity);

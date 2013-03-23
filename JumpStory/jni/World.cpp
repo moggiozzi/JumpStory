@@ -1,6 +1,7 @@
 #include "World.h"
 #include "ResourceManager.h"
 #include "AudioHelper.h"
+#include "GameState.h"
 
 namespace{
   Texture charTex,platTex,bgTex,ghostTex;
@@ -102,6 +103,10 @@ void World::update(float dt){
 }
 
 void World::keyDown(uint keyCode){
+  if (keyCode == KEY_ESC){
+    setGameState(GS_PAUSE);
+    return;
+  }
   switch(keyCode){
   case KEY_LEFT:
     charSpeed.x = -charMaxSpeed.x;

@@ -27,6 +27,7 @@ void LogMessage ( char* format, ...) {
   va_end ( args );
   OutputDebugString ( buf );
   OutputDebugString ( "\n" );
+  printf("%s\n",buf);
 }
 #else
 #define LOGI(...)

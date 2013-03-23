@@ -37,6 +37,9 @@ static int32_t engine_handle_input(struct android_app* app, AInputEvent* event) 
       game->touch(x,y);
       engine->animating = 1;
       return 1;
+  } else if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_KEY) {
+      if ( AKeyEvent_getAction(event) == AKEY_EVENT_ACTION_DOWN )
+        game->keyDown(AKeyEvent_getKeyCode(event));
   }
   return 0;
 }
@@ -141,17 +144,18 @@ void android_main(struct android_app* state) {
             }
           }
         }
-        if (state->destroyRequested != 0) {
-          //engine_term_display(&engine);
-          return;
-        }
-    }
-
+    if ( getGameState() == GS_EXIT ){
+      GLHelper::terminate();
+      //AudioHelper::destroy();
+      ANativeActivity_finish(state->activity);
+      return;
+    }    }
     if (engine.animating) {
-      currentTime = clock();
-      game->update((float)(currentTime-lastTime)/CLOCKS_PER_SEC);
-      game->draw();
-      lastTime = currentTime;
+    currentTime = clock();
+    game->update((float)(currentTime-lastTime)/CLOCKS_PER_SEC);
+    lastTime = currentTime;
+
+    game->draw();
     }
   }
 }
@@ -161,6 +165,11 @@ void android_main(struct android_app* state) {
 int nWindow;
 int nLoopMain = 0;
 
+void handleMouse( int button, int state, int x, int y){
+  if ( button == 0 && state==0 )
+    game->touch( x, y );
+}
+
 void handleInput( int keyCode, int mouseX, int mouseY ) {
   game->keyDown( keyCode );
 }
@@ -168,9 +177,7 @@ void handleInput( int keyCode, int mouseX, int mouseY ) {
 void handleInput( unsigned char keyCode, int mouseX, int mouseY )
 {
   game->keyDown( keyCode );
-  if (keyCode == 27)
-    glutLeaveMainLoop();
-  else if (keyCode=='f')
+  if (keyCode=='f')
     glutFullScreenToggle();
 }
 
@@ -194,9 +201,10 @@ void draw(void)
   // todo сделать вне функции draw с помощью glutTimerFunc
   //Sleep(300); // for test
   currentTime = clock();
-  // update
   AudioHelper::update();
   game->update((float)(currentTime-lastTime)/CLOCKS_PER_SEC);
+  if ( getGameState() == GS_EXIT )
+    glutLeaveMainLoop();
   lastTime = currentTime;
 
   game->draw();
@@ -215,6 +223,8 @@ int main(int argc, char* argv[])
 
   glutKeyboardFunc( handleInput );
   glutSpecialFunc( handleInput );
+  glutMouseFunc( handleMouse );
+
   glutDisplayFunc( draw );
   glutReshapeFunc( handleReshape );
 

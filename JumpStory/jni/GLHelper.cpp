@@ -178,13 +178,17 @@ void GLHelper::drawTriangle2d(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GL
   glDrawArrays( GL_TRIANGLE_FAN, 0, 3 );
 }
 
+void GLHelper::drawTexture(Texture* texture, Rect &dr){
+  GLHelper::drawTexture(texture, dr.x, dr.y, dr.width, dr.height);
+}
+
 void GLHelper::drawTexture(Texture* texture, int dx, int dy, int dw, int dh,
                            int tx, int ty, int tw, int th){
   if(tw==-1){
     tw = texture->width;
     th = texture->height;
   }
-  if(dw=-1){
+  if(dw==-1){
     dw=texture->width;
     dh=texture->height;
   }
