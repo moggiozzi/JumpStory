@@ -5,7 +5,9 @@
 #include "AudioHelper.h"
 #include "GameState.h"
 
-Game::Game(){
+Game::Game(){}
+
+bool Game::init(){
   setGameState(GS_MENU);
   menu.init();
   world.init();
@@ -16,6 +18,7 @@ void Game::drawFps(){
   sprintf(str,"fps:%d",fps.getFps());
   GLHelper::drawText(0, 0, str);
 }
+
 void Game::draw(){
   GLHelper::clear(0, 0, 0);
   GameState gState = getGameState();
@@ -40,6 +43,10 @@ void Game::update(float dt){
   fps.add(dt);
   GameState gState = getGameState();
   switch (gState){
+  case GS_INITLEVEL:
+    world.initLevel();
+    setGameState( GS_INGAME );
+    //break;
   case GS_INGAME:
     world.update(dt);
     break;
@@ -49,14 +56,14 @@ void Game::update(float dt){
   }
 }
 
-void Game::keyDown(uint keyCode){
+bool Game::keyDown(uint keyCode){
   GameState gState = getGameState();
   switch (gState){
   case GS_INGAME:
-    world.keyDown(keyCode);
+    return world.keyDown(keyCode);
   break;
   default:
-    menu.keyDown(keyCode);
+    return menu.keyDown(keyCode);
   break;
   }
 }

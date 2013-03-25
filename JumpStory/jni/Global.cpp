@@ -3,6 +3,7 @@
 
 float worldX;
 float worldY;
+float worldMaxY;
 int maxJumpHeight;
 int worldToDeviceX(float x){
   return (int)(x-worldX);

@@ -12,7 +12,7 @@
 
 clock_t lastTime=0, currentTime=0;
 
-Game *game;
+Game game;
 
 #ifdef __ANDROID__
 #include <unistd.h> /* sleep() */
@@ -34,12 +34,12 @@ static int32_t engine_handle_input(struct android_app* app, AInputEvent* event) 
     AMotionEvent_getAction(event) == AMOTION_EVENT_ACTION_DOWN) {
       float x = AMotionEvent_getX(event, 0);
       float y = AMotionEvent_getY(event, 0);
-      game->touch(x,y);
+      game.touch(x,y);
       engine->animating = 1;
       return 1;
   } else if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_KEY) {
       if ( AKeyEvent_getAction(event) == AKEY_EVENT_ACTION_DOWN )
-        game->keyDown(AKeyEvent_getKeyCode(event));
+        return game.keyDown(AKeyEvent_getKeyCode(event));
   }
   return 0;
 }
@@ -47,42 +47,62 @@ static int32_t engine_handle_input(struct android_app* app, AInputEvent* event) 
 static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
   struct engine* engine = (struct engine*)app->userData;
   switch (cmd) {
-  case APP_CMD_SAVE_STATE:
-    //engine->app->savedState = malloc(sizeof(struct saved_state));
-    //*((struct saved_state*)engine->app->savedState) = engine->state;
-    //engine->app->savedStateSize = sizeof(struct saved_state);
+    case APP_CMD_INPUT_CHANGED:
     break;
-  case APP_CMD_INIT_WINDOW:
-    if (engine->app->window != NULL) {
-      ResourceManager::init(engine->app->activity);
-      GLHelper::init(engine->app->window);
-      AudioHelper::init(engine->app->activity);
-      game = new Game();
-      game->draw();
-    }
+    case APP_CMD_INIT_WINDOW:
+      if (engine->app->window != NULL) {
+        ResourceManager::init(engine->app->activity);
+        GLHelper::init(engine->app->window);
+        AudioHelper::init(engine->app->activity);
+        game.init();
+        game.draw();
+      }
     break;
-  case APP_CMD_TERM_WINDOW:
+    case APP_CMD_TERM_WINDOW:
     break;
-  case APP_CMD_GAINED_FOCUS:
-    // When our app gains focus, we start monitoring the accelerometer.
-    if (engine->accelerometerSensor != NULL) {
-      ASensorEventQueue_enableSensor(engine->sensorEventQueue,
-        engine->accelerometerSensor);
-      // We'd like to get 60 events per second (in us).
-      ASensorEventQueue_setEventRate(engine->sensorEventQueue,
-        engine->accelerometerSensor, (1000L/60)*1000);
-    }
+    case APP_CMD_WINDOW_RESIZED:
     break;
-  case APP_CMD_LOST_FOCUS:
-    // When our app loses focus, we stop monitoring the accelerometer.
-    // This is to avoid consuming battery while not being used.
-    if (engine->accelerometerSensor != NULL) {
-      ASensorEventQueue_disableSensor(engine->sensorEventQueue,
-        engine->accelerometerSensor);
-    }
-    // Also stop animating.
-    engine->animating = 0;
-    game->draw();
+    case APP_CMD_WINDOW_REDRAW_NEEDED:
+    break;
+    case APP_CMD_CONTENT_RECT_CHANGED:
+    break;
+    case APP_CMD_GAINED_FOCUS:
+      // When our app gains focus, we start monitoring the accelerometer.
+      if (engine->accelerometerSensor != NULL) {
+        ASensorEventQueue_enableSensor(engine->sensorEventQueue,
+          engine->accelerometerSensor);
+        // We'd like to get 60 events per second (in us).
+        ASensorEventQueue_setEventRate(engine->sensorEventQueue,
+          engine->accelerometerSensor, (1000L/60)*1000);
+      }
+    break;
+    case APP_CMD_LOST_FOCUS:
+      if (engine->accelerometerSensor != NULL) {
+        ASensorEventQueue_disableSensor(engine->sensorEventQueue,
+          engine->accelerometerSensor);
+      }
+      // Also stop animating.
+      engine->animating = 0;
+      game.draw();
+    break;
+    case APP_CMD_CONFIG_CHANGED:
+    break;
+    case APP_CMD_LOW_MEMORY:
+    break;
+    case APP_CMD_START:
+    break;
+    case APP_CMD_RESUME:
+    break;
+    case APP_CMD_SAVE_STATE:
+      //engine->app->savedState = malloc(sizeof(struct saved_state));
+      //*((struct saved_state*)engine->app->savedState) = engine->state;
+      //engine->app->savedStateSize = sizeof(struct saved_state);
+    break;
+    case APP_CMD_PAUSE:
+    break;
+    case APP_CMD_STOP:
+    break;
+    case APP_CMD_DESTROY:
     break;
   }
 }
@@ -90,7 +110,7 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
 void android_main(struct android_app* state) {
 #ifndef NDEBUG
   // ожидание подключения отладчика
-  //volatile bool bGo = false; // поймать
+//  volatile bool bGo = false; // поймать
   volatile bool bGo = true; // не ловить
   while(!bGo) {
     sleep(1);
@@ -112,7 +132,6 @@ void android_main(struct android_app* state) {
     ASENSOR_TYPE_ACCELEROMETER);
   engine.sensorEventQueue = ASensorManager_createEventQueue(engine.sensorManager,
     state->looper, LOOPER_ID_USER, NULL, NULL);
-
   if (state->savedState != NULL) {
     // We are starting with a previous saved state; restore from it.
     //engine.state = *(struct saved_state*)state->savedState;
@@ -144,18 +163,22 @@ void android_main(struct android_app* state) {
             }
           }
         }
-    if ( getGameState() == GS_EXIT ){
-      GLHelper::terminate();
-      //AudioHelper::destroy();
-      ANativeActivity_finish(state->activity);
-      return;
-    }    }
+        if ( getGameState() == GS_EXIT ){
+          //GLHelper::terminate();
+          //AudioHelper::destroy();
+          //state->destroyRequested = 1;
+          //ANativeActivity_finish(state->activity);
+          
+          exit(0); // dirty hack
+          return;
+        }
+    }
     if (engine.animating) {
-    currentTime = clock();
-    game->update((float)(currentTime-lastTime)/CLOCKS_PER_SEC);
-    lastTime = currentTime;
+      currentTime = clock();
+      game.update((float)(currentTime-lastTime)/CLOCKS_PER_SEC);
+      lastTime = currentTime;
 
-    game->draw();
+      game.draw();
     }
   }
 }

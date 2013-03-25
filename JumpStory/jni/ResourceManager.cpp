@@ -15,6 +15,7 @@ jmethodID ResourceManager::getPixelsID;
 
 bool ResourceManager::init(ANativeActivity* activity) {
   lastTextureID = 0;
+  textures.clear();
 
   env = activity->env;
   jvm = activity->vm;

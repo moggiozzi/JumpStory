@@ -13,13 +13,14 @@ class Game{
   void drawFps();
 public:
   Game();
+  bool init();
   void draw();
   void update(float dt);
   void save();
   void resume();
 
   void touch(int x, int y);
-  void keyDown(uint keyCode);
+  bool keyDown(uint keyCode);
 };
 
 #endif // GAME_H_

@@ -4,6 +4,7 @@
 extern int maxJumpHeight;
 extern float worldX;
 extern float worldY;
+extern float worldMaxY;
 int worldToDeviceX(float x);
 int worldToDeviceY(float y);
 

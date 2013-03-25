@@ -10,6 +10,7 @@ class Character{
   Sprite *sprite;
 public:
   Character(Texture *charTex);
+  ~Character();
   void draw();
   void update(float dt);
 

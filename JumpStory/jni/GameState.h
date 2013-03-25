@@ -5,6 +5,7 @@
 
 enum GameState{
   GS_MENU,
+  GS_INITLEVEL,
   GS_INGAME,
   GS_GAMEOVER,
   GS_PAUSE,

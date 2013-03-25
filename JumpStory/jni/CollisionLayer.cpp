@@ -15,7 +15,7 @@ void CollisionLayer::init(){
   ResourceManager::loadImage("res/pl128.png",&textures[1]);
   ResourceManager::loadImage("res/pl192.png",&textures[2]);
   ResourceManager::loadImage("res/pl.png",&textures[3]);
-  generate();
+  initLevel();
 }
 
 bool CollisionLayer::isIntersect(float x1, float y1, float x2, float y2, float w){
@@ -51,12 +51,12 @@ void CollisionLayer::draw(){
         x+=widthTypes[j];
       }
     }
-    GLHelper::drawLine2d( worldToDeviceX(segments[i].x1), worldToDeviceY(segments[i].y1),
-      worldToDeviceX(segments[i].x2), worldToDeviceY(segments[i].y2) );
+    //GLHelper::drawLine2d( worldToDeviceX(segments[i].x1), worldToDeviceY(segments[i].y1),
+    //  worldToDeviceX(segments[i].x2), worldToDeviceY(segments[i].y2) );
   }
 }
 
-void CollisionLayer::generate(){
+void CollisionLayer::initLevel(){
   segments.clear();
 
   Segment s(-100,0,GLHelper::getWidth()+100,0);
@@ -74,6 +74,7 @@ void CollisionLayer::generate(){
     segments.push_back(s);
   }
 }
+
 void CollisionLayer::update(){
   for(uint i=0;i<segments.size();i++){
     if(worldY - segments[i].y1 > 64){

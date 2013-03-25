@@ -10,12 +10,20 @@ namespace{
 
 int jumpSoundId;
 
-void World::init(){
+bool World::init(){
   ResourceManager::loadImage("res/character.png",&charTex);
   ResourceManager::loadImage("res/bg.png",&bgTex);
   ResourceManager::loadImage("res/ghost.png",&ghostTex);
   AudioHelper::open("res/jump.ogg", jumpSoundId, false);
+  if (character)
+    delete character;
   character = new Character(&charTex);
+  collisionLayer.init();
+  initLevel();
+  return true;
+}
+
+void World::initLevel(){
   character->setPos(50.0f,50.0f+character->getHeight());
   charPos.x = 50.0f;
   charPos.y = 50.0f+character->getHeight();
@@ -28,13 +36,12 @@ void World::init(){
   //maxJumpHeight = g*t*t/2;
   maxJumpHeight = charMaxSpeed.y*charMaxSpeed.y/(2*g)-character->getHeight();
   worldX = 0; //character->getX()+character->getWidth+GLHelper::getWidth;
-  worldY = charPos.y - character->getHeight()/2 - GLHelper::getHeight()/2;
+  worldY = worldMaxY = charPos.y - character->getHeight()/2 - GLHelper::getHeight()/2;
   worldSpeed.x = 0;
   worldSpeed.y = (GLHelper::getHeight()/2 - GLHelper::getHeight() - (charPos.y - worldY));
   ghostPos.x=0;
   ghostPos.y=0;
-
-  collisionLayer.init();
+  collisionLayer.initLevel();
 }
 
 void World::draw(){
@@ -85,12 +92,18 @@ void World::update(float dt){
     charPos.x = (float)GLHelper::getWidth();
   if(charPos.x > GLHelper::getWidth())
     charPos.x = (float)-character->getWidth();
-  
+  if( charPos.y < worldMaxY-GLHelper::getWidth()/2 )
+    setGameState( GS_GAMEOVER );
+
   // обновить мир
   float nWorldY = charPos.y - character->getHeight()/2 - GLHelper::getHeight()/2;
   float d = nWorldY-worldY;
   worldSpeed.y = d*4.0f*charMaxSpeed.y/GLHelper::getHeight();
+  //if ( worldY + worldSpeed.y*dt > worldMaxY-64 )
   worldY += worldSpeed.y*dt;
+  if ( worldY > worldMaxY )
+    worldMaxY = worldY;
+
   collisionLayer.update();
 
   // враги
@@ -102,20 +115,22 @@ void World::update(float dt){
     ghostPos.y=worldY;
 }
 
-void World::keyDown(uint keyCode){
+bool World::keyDown(uint keyCode){
   if (keyCode == KEY_ESC){
     setGameState(GS_PAUSE);
-    return;
+    return true;
   }
   switch(keyCode){
   case KEY_LEFT:
     charSpeed.x = -charMaxSpeed.x;
+    return true;
     break;
   case KEY_RIGHT:
     charSpeed.x = charMaxSpeed.x;
+    return true;
     break;
-
   }
+  return false;
 }
 
 void World::touch(int x, int y){

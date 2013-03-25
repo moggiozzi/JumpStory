@@ -13,12 +13,14 @@ class World{
 
   Vector2f charPos, charSpeed, charMaxSpeed, worldSpeed;
 public:
-  World(){}
+  World() : character(0) {}
+  ~World(){}
   //Vector2f getSize(){return size;}
-  void init();
+  bool init();
+  void initLevel();
   void draw();
   void update(float dt);
-  void keyDown(uint keyCode);
+  bool keyDown(uint keyCode);
   void touch(int x, int y);
 };
 

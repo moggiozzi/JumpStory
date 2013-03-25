@@ -20,6 +20,8 @@ SLObjectItf AudioHelper::outputMixObject;
 AAssetManager *AudioHelper::assetManager;
 
 bool AudioHelper::init(ANativeActivity* activity){
+  isInit = false;
+  lastSoundId = 0;
 	assetManager = activity->assetManager;
   SLresult result;
   // create engine
@@ -140,8 +142,11 @@ bool AudioHelper::destroy(){
 
 bool AudioHelper::open(const char *file, int &soundId, bool isStreamed){
   Sound *sound = new Sound();
-  if (!sound->Open(file, isStreamed))
+  if (!sound || !sound->Open(file, isStreamed)) {
     LOGI("Sound %s not open", file);
+	delete sound;
+	return false;
+  }
   soundId = lastSoundId;
   sounds[lastSoundId++] = sound;
   return true;

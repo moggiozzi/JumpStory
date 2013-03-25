@@ -57,16 +57,17 @@ void Menu::draw(){
 void Menu::touch(int x, int y){
   GameState gState = getGameState();
   if ( entryRects[ ME_PLAY ].isContain( x, y ) )
-    setGameState( GS_INGAME );
+    setGameState( GS_INITLEVEL );
   else if ( entryRects[ ME_SOUND ].isContain( x, y ) )
     changeSoundState();
   else if ( entryRects[ ME_EXIT ].isContain( x, y ) )
     setGameState( GS_EXIT );
 }
 
-void Menu::keyDown(uint keyCode){
+bool Menu::keyDown(uint keyCode){
   if (keyCode == KEY_ESC){
     setGameState(GS_EXIT);
-    return;
+    return true;
   }
+  return false;
 }
