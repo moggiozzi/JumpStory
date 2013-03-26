@@ -144,6 +144,11 @@ int ResourceManager::loadImage(const char *path, Texture *tex, int format){
     tex->pixels = (char*)ilGetData();
     glGenTextures(1, &tex->texNameGl);
     glBindTexture(GL_TEXTURE_2D, tex->texNameGl);
+    isglerr("Err glBindTexture");
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);//GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);//GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, tex->format, tex->width, tex->height, 0,
       tex->format, GL_UNSIGNED_BYTE, tex->pixels);
     isglerr("Err glTexImage2D");

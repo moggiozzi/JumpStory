@@ -10,6 +10,9 @@
 
 float GLHelper::points_[MAX_POINTS_COUNT];
 Texture GLHelper::fontTexture;
+float ratioX=1, ratioY=1;
+GLfloat GLHelper::xToGl(int x) { return ( (float)x/width-0.5f)*2.0f*ratioX; }
+GLfloat GLHelper::yToGl(int y) { return ( ((float)height-y)/height-0.5f)*2.0f*ratioY; }
 
 #ifdef __ANDROID__
 
@@ -98,15 +101,20 @@ void GLHelper::swapBuffers(){
 }
 
 void GLHelper::setParams(){
+  glLoadIdentity();
+  if ( width < height ) {
+    ratioX = (float)width/height;
+    ratioY = 1.0;
+  }else{
+    ratioX = 1.0;
+    ratioY = (float)height/width;
+  }
+  glScalef( 1.0/ratioX, 1.0/ratioY, 1.0 ); // чтоб не возникали деформации при повороте текстур
   glEnable(GL_BLEND);
   //glBlendFunc (GL_SRC_ALPHA, GL_SRC_ALPHA);
   glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);//смешение
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
   glDisable(GL_DEPTH_TEST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);//GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);//GL_CLAMP_TO_EDGE);
   isglerr("Error glParams");
 }
 
@@ -182,6 +190,18 @@ void GLHelper::drawTexture(Texture* texture, Rect &dr){
   GLHelper::drawTexture(texture, dr.x, dr.y, dr.width, dr.height);
 }
 
+void GLHelper::drawTexture(Texture* texture, Vector2 &pos, float angle){
+  glPushMatrix();
+  int dx = pos.x, dy = pos.y, dw = texture->width, dh = texture->height;
+  glTranslatef(xToGl(dx+dw/2),yToGl(dy+dh/2),0);
+  glRotatef(angle, 0.0, 0.0, 1.0);
+  glTranslatef(-xToGl(dx+dw/2),-yToGl(dy+dh/2),0);
+
+  GLHelper::drawTexture(texture, dx, dy);
+
+  glPopMatrix();
+}
+
 void GLHelper::drawTexture(Texture* texture, int dx, int dy, int dw, int dh,
                            int tx, int ty, int tw, int th){
   if(tw==-1){
@@ -193,17 +213,18 @@ void GLHelper::drawTexture(Texture* texture, int dx, int dy, int dw, int dh,
     dh=texture->height;
   }
   glEnable (GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, texture->texNameGl);
+  isglerr("Error glBindTexture");
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);//GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);//GL_CLAMP_TO_EDGE);
-  glBindTexture(GL_TEXTURE_2D, texture->texNameGl);
-  isglerr("Eror loading texture into OpenGL.");
+  isglerr("Error glTexParameteri");
   glEnableClientState(GL_VERTEX_ARRAY);
   points_[0] = xToGl(dx); 			points_[1] = yToGl(dy+dh);
   points_[2] = xToGl(dx);				points_[3] = yToGl(dy);
-  points_[4] = xToGl(dx+dw);	points_[5] = yToGl(dy);
-  points_[6] = xToGl(dx+dw); 	points_[7] = yToGl(dy+dh);
+  points_[4] = xToGl(dx+dw);    points_[5] = yToGl(dy);
+  points_[6] = xToGl(dx+dw); 	  points_[7] = yToGl(dy+dh);
   glVertexPointer(2, GL_FLOAT, 0, points_);
   glEnableClientState (GL_TEXTURE_COORD_ARRAY);
   float pp[] = {
@@ -221,35 +242,36 @@ void GLHelper::drawTexture(Texture* texture, int dx, int dy, int dw, int dh,
 }
 
 void GLHelper::drawText(int x, int y, const char* text, uint size){
-	uint len = strnlen(text,255);
-	uint fontTextureSize = 256;
-	uint glyphSize = 16;
-	float textureCoords[8];
-	glEnable (GL_TEXTURE_2D);
+  uint len = strnlen(text,255);
+  uint fontTextureSize = 256;
+  uint glyphSize = 16;
+  float textureCoords[8];
+  glEnable (GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, fontTexture.texNameGl);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);//GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);//GL_CLAMP_TO_EDGE);
-  glBindTexture(GL_TEXTURE_2D, fontTexture.texNameGl);
-	glVertexPointer(2, GL_FLOAT, 0, points_);
-	glTexCoordPointer(2, GL_FLOAT, 0, textureCoords);
+  isglerr("Error glTexParameteri");
+  glVertexPointer(2, GL_FLOAT, 0, points_);
+  glTexCoordPointer(2, GL_FLOAT, 0, textureCoords);
   glEnableClientState(GL_VERTEX_ARRAY);
   glEnableClientState (GL_TEXTURE_COORD_ARRAY);
   int i,j;
-	for(uint k=0;k<len;k++){
-		i=text[k]/16;
-		j=text[k]%16;
-		textureCoords[0]=(float)j*glyphSize/fontTextureSize;	textureCoords[1]=(float)i*glyphSize/fontTextureSize;
-		textureCoords[2]=(float)j*glyphSize/fontTextureSize;	textureCoords[3]=(float)(i+1)*glyphSize/fontTextureSize;
-		textureCoords[4]=(float)(j+1)*glyphSize/fontTextureSize;textureCoords[5]=(float)(i+1)*glyphSize/fontTextureSize;
-		textureCoords[6]=(float)(j+1)*glyphSize/fontTextureSize;textureCoords[7]=(float)i*glyphSize/fontTextureSize;
+  for(uint k=0;k<len;k++){
+    i=text[k]/16;
+    j=text[k]%16;
+    textureCoords[0]=(float)j*glyphSize/fontTextureSize;	textureCoords[1]=(float)i*glyphSize/fontTextureSize;
+    textureCoords[2]=(float)j*glyphSize/fontTextureSize;	textureCoords[3]=(float)(i+1)*glyphSize/fontTextureSize;
+    textureCoords[4]=(float)(j+1)*glyphSize/fontTextureSize;textureCoords[5]=(float)(i+1)*glyphSize/fontTextureSize;
+    textureCoords[6]=(float)(j+1)*glyphSize/fontTextureSize;textureCoords[7]=(float)i*glyphSize/fontTextureSize;
 
-		points_[0] = xToGl(x+k*size);	   points_[1] = yToGl(y);
-		points_[2] = xToGl(x+k*size);	   points_[3] = yToGl(y+size);
-		points_[4] = xToGl(x+(k+1)*size); points_[5] = yToGl(y+size);
-		points_[6] = xToGl(x+(k+1)*size); points_[7] = yToGl(y);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-	}
+    points_[0] = xToGl(x+k*size);	   points_[1] = yToGl(y);
+    points_[2] = xToGl(x+k*size);	   points_[3] = yToGl(y+size);
+    points_[4] = xToGl(x+(k+1)*size); points_[5] = yToGl(y+size);
+    points_[6] = xToGl(x+(k+1)*size); points_[7] = yToGl(y);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+  }
   glDisableClientState (GL_TEXTURE_COORD_ARRAY);
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisable(GL_TEXTURE_2D);

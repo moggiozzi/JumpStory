@@ -190,16 +190,16 @@ int nLoopMain = 0;
 
 void handleMouse( int button, int state, int x, int y){
   if ( button == 0 && state==0 )
-    game->touch( x, y );
+    game.touch( x, y );
 }
 
 void handleInput( int keyCode, int mouseX, int mouseY ) {
-  game->keyDown( keyCode );
+  game.keyDown( keyCode );
 }
 
 void handleInput( unsigned char keyCode, int mouseX, int mouseY )
 {
-  game->keyDown( keyCode );
+  game.keyDown( keyCode );
   if (keyCode=='f')
     glutFullScreenToggle();
 }
@@ -225,12 +225,12 @@ void draw(void)
   //Sleep(300); // for test
   currentTime = clock();
   AudioHelper::update();
-  game->update((float)(currentTime-lastTime)/CLOCKS_PER_SEC);
+  game.update((float)(currentTime-lastTime)/CLOCKS_PER_SEC);
   if ( getGameState() == GS_EXIT )
     glutLeaveMainLoop();
   lastTime = currentTime;
 
-  game->draw();
+  game.draw();
 }
 
 int main(int argc, char* argv[])
@@ -240,7 +240,7 @@ int main(int argc, char* argv[])
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 
   glutInitWindowPosition(400,100);
-  glutInitWindowSize(320,480);
+  glutInitWindowSize(GLHelper::getWidth(),GLHelper::getHeight());
 
   nWindow = glutCreateWindow("JumpStory");
 
@@ -257,7 +257,7 @@ int main(int argc, char* argv[])
   GLHelper::init();
   AudioHelper::init();
 
-  game = new Game();
+  game.init();
 
   currentTime = lastTime = clock();
   glutMainLoop();

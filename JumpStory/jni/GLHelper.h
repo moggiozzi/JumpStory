@@ -22,8 +22,8 @@ class GLHelper{
   static int height;
   static Texture fontTexture;
 
-  inline static GLfloat xToGl(int x) { return ( (float)x/width-0.5f)*2.0f; }
-  inline static GLfloat yToGl(int y) { return ( ((float)height-y)/height-0.5f)*2.0f; }
+  static GLfloat xToGl(int x);
+  static GLfloat yToGl(int y);
 public:
 #ifdef __ANDROID__
   static EGLDisplay display;
@@ -52,6 +52,8 @@ public:
   static void drawTexture(Texture* texture, int dx, int dy, int dw=-1, int dh=-1,
     int tx=0, int ty=0, int tw=-1, int th=-1);
   static void drawTexture(Texture* texture, Rect &dr);
+  static void drawTexture(Texture* texture, Vector2 &pos, float angle);
+
   static void drawText(int x, int y, const char* text, uint size=16);
 };
 

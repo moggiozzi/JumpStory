@@ -11,6 +11,7 @@ bool Game::init(){
   setGameState(GS_MENU);
   menu.init();
   world.init();
+  return true;
 }
 
 void Game::drawFps(){
