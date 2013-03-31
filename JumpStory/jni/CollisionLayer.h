@@ -1,8 +1,11 @@
 #ifndef COLLISION_LAYER_H_
 #define COLLISION_LAYER_H_
 
+#ifndef PRIMITIVES_H_
+#include "Primitives.h"
+#endif
+
 #include <vector>
-#include "Helper.h"
 
 class CollisionLayer{
   std::vector< Segment<int> > segments;

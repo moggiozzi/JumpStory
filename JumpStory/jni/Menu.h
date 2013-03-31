@@ -1,7 +1,9 @@
 #ifndef MENU_H_
 #define MENU_H_
 
+#ifndef GLOBAL_H_
 #include "Global.h"
+#endif
 
 class Menu{
 public:

@@ -1,9 +1,15 @@
 #ifndef WORLD_H_
 #define WORLD_H_
 
+#ifndef GLHELPER_H_
 #include "GLHelper.h"
+#endif
+#ifndef COLLISION_LAYER_H_
 #include "CollisionLayer.h"
+#endif
+#ifndef CHARACTER_H_
 #include "Character.h"
+#endif
 
 class World{
   float g;

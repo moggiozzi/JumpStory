@@ -80,7 +80,7 @@
     <ClCompile Include="..\..\JumpStory\jni\GameState.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\GLHelper.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\Global.cpp" />
-    <ClCompile Include="..\..\JumpStory\jni\Helper.cpp" />
+    <ClCompile Include="..\..\JumpStory\jni\Primitives.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\main.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\Menu.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\ResourceManager.cpp" />
@@ -99,7 +99,7 @@
     <ClInclude Include="..\..\JumpStory\jni\GameState.h" />
     <ClInclude Include="..\..\JumpStory\jni\GLHelper.h" />
     <ClInclude Include="..\..\JumpStory\jni\Global.h" />
-    <ClInclude Include="..\..\JumpStory\jni\Helper.h" />
+    <ClInclude Include="..\..\JumpStory\jni\Primitives.h" />
     <ClInclude Include="..\..\JumpStory\jni\Menu.h" />
     <ClInclude Include="..\..\JumpStory\jni\ResourceManager.h" />
     <ClInclude Include="..\..\JumpStory\jni\Sound.h" />

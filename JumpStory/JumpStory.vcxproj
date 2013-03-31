@@ -72,9 +72,9 @@
     <ClCompile Include="jni\GameState.cpp" />
     <ClCompile Include="jni\GLHelper.cpp" />
     <ClCompile Include="jni\Global.cpp" />
-    <ClCompile Include="jni\Helper.cpp" />
     <ClCompile Include="jni\main.cpp" />
     <ClCompile Include="jni\Menu.cpp" />
+    <ClCompile Include="jni\Primitives.cpp" />
     <ClCompile Include="jni\ResourceManager.cpp" />
     <ClCompile Include="jni\Sound.cpp" />
     <ClCompile Include="jni\Sprite.cpp" />
@@ -91,8 +91,8 @@
     <ClInclude Include="jni\GameState.h" />
     <ClInclude Include="jni\GLHelper.h" />
     <ClInclude Include="jni\Global.h" />
-    <ClInclude Include="jni\Helper.h" />
     <ClInclude Include="jni\Menu.h" />
+    <ClInclude Include="jni\Primitives.h" />
     <ClInclude Include="jni\ResourceManager.h" />
     <ClInclude Include="jni\Sound.h" />
     <ClInclude Include="jni\Sprite.h" />

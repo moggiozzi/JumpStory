@@ -8,10 +8,15 @@
 Game::Game(){}
 
 bool Game::init(){
+  bool res = true;
   setGameState(GS_MENU);
-  menu.init();
-  world.init();
-  return true;
+  res = res && menu.init();
+  res = res && world.init();
+  int sId;
+  res = res && AudioHelper::open("res/main.ogg",sId);
+  AudioHelper::update();
+  AudioHelper::play(sId);
+  return res;
 }
 
 void Game::drawFps(){

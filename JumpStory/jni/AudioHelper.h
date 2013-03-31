@@ -1,7 +1,8 @@
-#ifndef AUDIO_HELPER_H_
-#define AUDIO_HELPER_H_
-
+#ifndef AUDIO_PRIMITIVES_H_
+#define AUDIO_PRIMITIVES_H_
+#ifndef GLOBAL_H_
 #include "Global.h"
+#endif
 #include <map>
 #include <string>
 #ifdef __ANDROID__

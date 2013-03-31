@@ -1,7 +1,9 @@
 #ifndef WORLD_INFO_H_
 #define WORLD_INFO_H_
 
-#include "Helper.h"
+#ifndef PRIMITIVES_H_
+#include "Primitives.h"
+#endif
 
 extern float maxJumpHeight;
 extern Vector2<float> worldPos;

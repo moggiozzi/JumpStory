@@ -2,7 +2,7 @@
 #include "GLHelper.h"
 #include "ResourceManager.h"
 #include "WorldInfo.h"
-#include "Helper.h"
+#include "Primitives.h"
 #include <algorithm>
 
 #define platformTypeCnt 4

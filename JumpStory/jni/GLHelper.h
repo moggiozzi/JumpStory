@@ -1,10 +1,11 @@
-#ifndef GLHELPER_H_
-#define GLHELPER_H_
+#ifndef GLPRIMITIVES_H_
+#define GLPRIMITIVES_H_
+
 #ifndef GLOBAL_H_
 #include "Global.h"
 #endif
-#ifndef HELPER_H_
-#include "Helper.h"
+#ifndef PRIMITIVES_H_
+#include "Primitives.h"
 #endif
 #ifndef TEXTURE_H_
 #include "Texture.h"
@@ -63,4 +64,4 @@ public:
   static void drawText(int x, int y, const char* text, uint size=16);
 };
 
-#endif // GLHELPER_H_
+#endif // GLPRIMITIVES_H_

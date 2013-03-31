@@ -1,8 +1,12 @@
 #ifndef CHARACTER_H_
 #define CHARACTER_H_
 
-#include "Helper.h"
+#ifndef PRIMITIVES_H_
+#include "Primitives.h"
+#endif
+#ifndef SPRITE_H_
 #include "Sprite.h"
+#endif
 
 class Character{
   Vector2<float> pos;

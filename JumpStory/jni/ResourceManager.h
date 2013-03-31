@@ -1,7 +1,9 @@
 #ifndef RESOURCE_MANAGER_H
 #define RESOURCE_MANAGER_H
 
+#ifndef GLHELPER_H_
 #include "GLHelper.h"
+#endif
 
 #ifdef __ANDROID__
 #include "android/bitmap.h"

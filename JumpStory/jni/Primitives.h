@@ -1,7 +1,9 @@
-#ifndef HELPER_H_
-#define HELPER_H_
+#ifndef PRIMITIVES_H_
+#define PRIMITIVES_H_
 
+#ifndef GLOBAL_H_
 #include "Global.h"
+#endif
 #include <algorithm>
 
 #ifdef __ANDROID__

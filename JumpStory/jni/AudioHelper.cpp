@@ -127,7 +127,7 @@ void AudioHelper::stop(int soundId){
   assert(SL_RESULT_SUCCESS == result);
   result = (*fdPlayerPlay)->SetPlayState(fdPlayerPlay, SL_PLAYSTATE_STOPPED);
 }
-
+void AudioHelper::update(){}
 #elif _WIN32
 bool AudioHelper::init(){
   bool res = InitializeOpenAL();
@@ -173,7 +173,9 @@ void AudioHelper::stop(int soundId){
 }
 
 void AudioHelper::update(){
-  sounds[0]->Update();
+  for(Sounds::iterator it = sounds.begin(); it!= sounds.end(); ++it)
+    if (it->second->IsStreamed())
+      it->second->Update();
 }
 
 #endif

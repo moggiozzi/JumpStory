@@ -1,5 +1,5 @@
 //#include "Global.h"
-#include "GLhelper.h"
+#include "GLHelper.h"
 #include "ResourceManager.h"
 #define _USE_MATH_DEFINES // for math constants such as M_PI
 #include <math.h>

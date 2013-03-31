@@ -4,8 +4,8 @@
 #ifndef GLOBAL_H_
 #include "Global.h"
 #endif
-#ifndef HELPER_H_
-#include "Helper.h"
+#ifndef PRIMITIVES_H_
+#include "Primitives.h"
 #endif
 #include <vector>
 

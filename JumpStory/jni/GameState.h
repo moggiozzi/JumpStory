@@ -1,7 +1,9 @@
 #ifndef GAME_STATE_H_
 #define GAME_STATE_H_
 
+#ifndef GLOBAL_H_
 #include "Global.h"
+#endif
 
 enum GameState{
   GS_MENU,

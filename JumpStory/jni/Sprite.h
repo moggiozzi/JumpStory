@@ -1,7 +1,9 @@
 #ifndef SPRITE_H_
 #define SPRITE_H_
 
+#ifndef GLHELPER_H_
 #include "GLHelper.h"
+#endif
 
 class Sprite{
 
