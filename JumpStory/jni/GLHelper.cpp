@@ -109,7 +109,7 @@ void GLHelper::setParams(){
     ratioX = 1.0;
     ratioY = (float)height/width;
   }
-  glScalef( 1.0/ratioX, 1.0/ratioY, 1.0 ); // чтоб не возникали деформации при повороте текстур
+  glScalef( 1.0f/ratioX, 1.0f/ratioY, 1.0f ); // чтоб не возникали деформации при повороте текстур
   glEnable(GL_BLEND);
   //glBlendFunc (GL_SRC_ALPHA, GL_SRC_ALPHA);
   glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);//смешение
@@ -186,31 +186,34 @@ void GLHelper::drawTriangle2d(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GL
   glDrawArrays( GL_TRIANGLE_FAN, 0, 3 );
 }
 
-void GLHelper::drawTexture(Texture* texture, Rect &dr){
-  GLHelper::drawTexture(texture, dr.x, dr.y, dr.width, dr.height);
+void GLHelper::drawTexture(Texture* texture, Rect<int> &dr){
+  GLHelper::drawTexture(texture, dr.x(), dr.y(), dr.getWidth(), dr.getHeight());
 }
 
-void GLHelper::drawTexture(Texture* texture, Vector2 &pos, float angle){
+void GLHelper::drawTexture(Texture* texture, Vector2<int>& pos, float angle){
+  if ( angle == 0.0f )
+  {
+    GLHelper::drawTexture(texture, pos.x(), pos.y());
+    return;
+  }
   glPushMatrix();
-  int dx = pos.x, dy = pos.y, dw = texture->width, dh = texture->height;
+  int dx = pos.x(), dy = pos.y(), dw = texture->getWidth(), dh = texture->getHeight();
   glTranslatef(xToGl(dx+dw/2),yToGl(dy+dh/2),0);
   glRotatef(angle, 0.0, 0.0, 1.0);
   glTranslatef(-xToGl(dx+dw/2),-yToGl(dy+dh/2),0);
-
   GLHelper::drawTexture(texture, dx, dy);
-
   glPopMatrix();
 }
 
 void GLHelper::drawTexture(Texture* texture, int dx, int dy, int dw, int dh,
                            int tx, int ty, int tw, int th){
   if(tw==-1){
-    tw = texture->width;
-    th = texture->height;
+    tw = texture->getWidth();
+    th = texture->getHeight();
   }
   if(dw==-1){
-    dw=texture->width;
-    dh=texture->height;
+    dw=texture->getWidth();
+    dh=texture->getHeight();
   }
   glEnable (GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, texture->texNameGl);
@@ -228,10 +231,10 @@ void GLHelper::drawTexture(Texture* texture, int dx, int dy, int dw, int dh,
   glVertexPointer(2, GL_FLOAT, 0, points_);
   glEnableClientState (GL_TEXTURE_COORD_ARRAY);
   float pp[] = {
-    (float)tx/texture->width,     (float)(ty+th)/texture->height, //0,1,
-    (float)tx/texture->width,     (float)ty/texture->height,      //0,0
-    (float)(tx+tw)/texture->width,(float)ty/texture->height,      //1,0
-    (float)(tx+tw)/texture->width,(float)(ty+th)/texture->height, //1,1,
+    (float)tx/texture->getWidth(),     (float)(ty+th)/texture->getHeight(), //0,1,
+    (float)tx/texture->getWidth(),     (float)ty/texture->getHeight(),      //0,0
+    (float)(tx+tw)/texture->getWidth(),(float)ty/texture->getHeight(),      //1,0
+    (float)(tx+tw)/texture->getWidth(),(float)(ty+th)/texture->getHeight(), //1,1,
   };
   glTexCoordPointer(2, GL_FLOAT, 0, pp);
   glDrawArrays(GL_TRIANGLE_FAN, 0, 4);

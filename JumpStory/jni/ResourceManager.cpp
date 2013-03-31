@@ -81,13 +81,12 @@ int ResourceManager::loadImage(const char *path, Texture *tex, int format) {
   }
   //todo
 
-  tex->width = bitmapInfo.width;
-  tex->height = bitmapInfo.height;
+  tex->size.set( bitmapInfo.width, bitmapInfo.height );
   tex->format = format;
   tex->pixels = (char*)textureData;
   glGenTextures(1, &tex->texNameGl);
   glBindTexture(GL_TEXTURE_2D, tex->texNameGl);
-  glTexImage2D(GL_TEXTURE_2D, 0, tex->format, tex->width, tex->height, 0,
+  glTexImage2D(GL_TEXTURE_2D, 0, tex->format, tex->getWidth(), tex->getHeight(), 0,
     tex->format, GL_UNSIGNED_BYTE, tex->pixels);
   isglerr("Error glTexImage2d");
   lastTextureID++;
@@ -139,8 +138,8 @@ int ResourceManager::loadImage(const char *path, Texture *tex, int format){
       return false;
     }
     tex->format = format;
-    tex->width = ilGetInteger(IL_IMAGE_WIDTH);
-    tex->height = ilGetInteger(IL_IMAGE_HEIGHT);
+    tex->size.setX( ilGetInteger(IL_IMAGE_WIDTH) );
+    tex->size.setY( ilGetInteger(IL_IMAGE_HEIGHT) );
     tex->pixels = (char*)ilGetData();
     glGenTextures(1, &tex->texNameGl);
     glBindTexture(GL_TEXTURE_2D, tex->texNameGl);
@@ -149,7 +148,7 @@ int ResourceManager::loadImage(const char *path, Texture *tex, int format){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);//GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);//GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, tex->format, tex->width, tex->height, 0,
+    glTexImage2D(GL_TEXTURE_2D, 0, tex->format, tex->getWidth(), tex->getHeight(), 0,
       tex->format, GL_UNSIGNED_BYTE, tex->pixels);
     isglerr("Err glTexImage2D");
   } else {

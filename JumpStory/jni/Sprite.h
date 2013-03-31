@@ -7,13 +7,14 @@ class Sprite{
 
   /// прямоугольник текстуры для отрисовки
   //Rect rect;
+  Texture *texture_;
 public:
-  Texture *texture;
-  Sprite( Texture *tex ):texture(tex){}
-  //Sprite( Texture *tex, int x, int y, int w, int h ) :
-  //  rect( x, y, w, h ), texture( tex ) { }
+  Sprite( Texture *tex ):texture_(tex){}
+  int getWidth(){ return texture_->getWidth(); }
+  int getHeight(){return texture_->getHeight();}
   void draw(int x, int y);
-  void draw(int x, int y, int w, int h);
+  void draw(Vector2<int>& pos);
+  //void draw(int x, int y, int w, int h);
 };
 
 #endif

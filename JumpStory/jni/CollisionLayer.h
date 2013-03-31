@@ -5,7 +5,7 @@
 #include "Helper.h"
 
 class CollisionLayer{
-  std::vector<Segment> segments;
+  std::vector< Segment<int> > segments;
   void generate();
 public:
   CollisionLayer();

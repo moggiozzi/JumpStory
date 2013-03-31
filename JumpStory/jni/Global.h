@@ -1,13 +1,6 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-extern int maxJumpHeight;
-extern float worldX;
-extern float worldY;
-extern float worldMaxY;
-int worldToDeviceX(float x);
-int worldToDeviceY(float y);
-
 #ifdef __ANDROID__
 #include <jni.h>
 #include <android_native_app_glue.h>
@@ -21,7 +14,6 @@ int worldToDeviceY(float y);
 #else // for release
 #define DOEMPTYDEFS
 #endif
-
 
 #elif _WIN32
 

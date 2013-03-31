@@ -15,115 +15,209 @@
 #define KEY_RIGHT GLUT_KEY_RIGHT
 #endif
 
-// todo  через шаблон
-struct Vector2f{
-  float x,y;
-};
-struct Vector2{
-  int x,y;
-};
-#define Point Vector2
-struct Segment{
-  union{
-    Vector2 p1;
-    struct{
-      int x1,y1;
-    };
-  };
-  union{
-    Vector2 p2;
-    struct{
-      int x2,y2;
-    };
-  };
-  Segment(){}
-  Segment(int _x1, int _y1, int _x2, int _y2):
-    x1(_x1),y1(_y1),x2(_x2),y2(_y2){}
-  Segment(const Vector2 &_p1, const Vector2 &_p2):
-    x1(_p1.x),y1(_p1.y),x2(_p2.x),y2(_p2.y){}
-  int getWidth(){return abs(x2-x1);}
-};
-bool cmpY(Segment& s1, Segment& s2);
+template<class T> int sign(T v){
+  if (v>0) return 1;
+  if (v<0) return -1;
+  else return 0;
+}
 
-double getDistSqr(Vector2 p1, Vector2 p2);
-double getDist(Vector2 p1, Vector2 p2);
-double getDist(Vector2 p1, Segment s1);
-double getDist(Segment& s1, Segment& s2);
+template<class T> class Vector2;
+template<class T> class Segment;
+template<class T> class Rect;
+template<class T> float getDist(const Vector2<T>& p1, const Vector2<T>& p2);
+template<class T> float getDist(const Vector2<T>& p1, const Segment<T>& s1);
+template<class T> float getDist(const Segment<T>& s1, const Segment<T>& s2);
+template<class T> bool IsIntersect(const Segment<T>& s1, const Segment<T>& s2);
+template<class T> bool IsIntersect(const Segment<T>& s, const Rect<T>& r);
+template<class T> bool IsIntersect(const Rect<T>& r, const Segment<T>& s);
+template<class T> bool IsIntersect(const Rect<T>& r1, const Rect<T>& r2);
 
-struct Rect{
-  //	T x, y, w, h;
-  //	Rect ( T _x, T _y, T _w, T _h ) :
-  //		x(_x), y(_y), w(_w), h(_h) { }
-  union {
-    Vector2 pos;
-    struct {
-      int x,y;
-    };
-  };
-  union {
-    Vector2 size;
-    struct {
-      int width, height;
-    };
-  };
-  Rect( int _x=0, int _y=0, int _w=0, int _h=0 ) :
-    x(_x), y(_y), width(_w), height(_h) { }
-  int getTop();
-  int getBottom();
-  int getLeft();
-  int getRight();
-  bool isContain( int x, int y );
-  bool isContain( Vector2 &point );
-};
-
-
-struct Texture {
-#if !defined(__ANDROID__)
-  int id; // id for DevIL data
-#endif
-  union 
-  {
-    Vector2 size;
-    struct{
-      int width;
-      int height;
-    };
-  };
-  uint format;
-  /// флаг генерации GL текстуры
-  bool isGenTexNameGl;
-  /// "имя" текстуры GL
-  uint texNameGl;
-  char *pixels;
-  Texture(): isGenTexNameGl(false), pixels(0) {}
-};
-
-class FPS{
-#define maxSpansCnt 100
-  float spans[maxSpansCnt];
-  uint currentSpanIdx;
-  uint currentSpanCnt;
+template<class T>
+class Vector2{
+  T x_,y_;
 public:
-  FPS():currentSpanIdx(0),currentSpanCnt(0){
-    for(uint i=0;i<maxSpansCnt;i++){
-      spans[i]=0;
-    }
-  }
-  void add(float span){
-    spans[currentSpanIdx]=span;
-    currentSpanIdx=(currentSpanIdx+1)%maxSpansCnt;
-    if(currentSpanCnt<maxSpansCnt)
-      currentSpanCnt++;
-  }
-  uint getFps(){
-    float sum = 0;
-    for(uint i=0;i<currentSpanCnt;i++)
-      sum+=spans[i];
-    if(sum>0)
-      return static_cast<uint>(currentSpanCnt/sum);
-    else
-      return 0;
-  }
+  T x() const;
+  T y() const;
+  void set(T x, T y);
+  void setX(T x);
+  void setY(T y);
+  Vector2(T x = 0, T y = 0);
+  Vector2(const Vector2<int>& vi):x_(vi.x()),y_(vi.y()){}
 };
+
+template<class T>
+Vector2<T> operator - (const Vector2<T>& l, const Vector2<T>& r);
+
+template<class T>
+class Segment{
+  Vector2<T> p1_, p2_;
+public:
+  const Vector2<T>& p1()const;
+  const Vector2<T>& p2()const;
+  T x1()const;
+  T y1()const;
+  T x2()const;
+  T y2()const;
+  Segment(T x1=0, T y1=0, T x2=0, T y2=0);
+  Segment(const Vector2<T>& p1, const Vector2<T>& p2);
+  Segment(const Segment<int>& si):p1_(si.p1()),p2_(si.p2()){}
+  T getWidth()const;
+  void set(T x1,T y1,T x2, T y2);
+};
+template<class T>
+bool cmpY(Segment<T>& s1, Segment<T>& s2);
+
+template<class T>
+class Rect{
+  Vector2<T> pos_;
+  Vector2<T> size_;
+public:
+  Rect( T x=0, T y=0, T w=0, T h=0 );
+  const Vector2<T>& getPos()const;
+  const Vector2<T>& getSize()const;
+  T x()const;
+  T y()const;
+  T getWidth()const;
+  T getHeight()const;
+  void setPos(const Vector2<T> &pos);
+  void setSize(const Vector2<T> &size);
+  void setX(T x);
+  void setY(T y);
+  void setWidth(T w);
+  void setHeight(T h);
+  T getTop()const;
+  T getBottom()const;
+  T getLeft()const;
+  T getRight()const;
+  Vector2<T> getRightTop();
+  Vector2<T> getLeftBottom();
+  Vector2<T> getRightBottom();
+  bool isContain(const Vector2<T> &point )const;
+};
+
+// implementation
+template<class T> T Vector2<T>::x() const{ return x_; }
+template<class T> T Vector2<T>::y() const{ return y_; }
+template<class T> Vector2<T>::Vector2(T x, T y) : x_(x), y_(y){}
+template<class T> Vector2<T> operator - (const Vector2<T>& l, const Vector2<T>& r){
+  return Vector2<T>(l.x()-r.x(),l.y()-r.y());
+}
+template<class T> void Vector2<T>::set(T x, T y){ x_ = x; y_ = y; }
+template<class T> void Vector2<T>::setX(T x){ x_ = x; }
+template<class T> void Vector2<T>::setY(T y){ y_ = y; }
+
+template<class T> Segment<T>::Segment(T x1, T y1, T x2, T y2):p1_(x1,y1),p2_(x2,y2){}
+template<class T> Segment<T>::Segment(const Vector2<T>& p1, const Vector2<T>& p2):p1_(p1),p2_(p2){}
+template<class T> T Segment<T>::getWidth()const{return getDist(p1_,p2_);}
+template<class T> const Vector2<T>& Segment<T>::p1()const{return p1_;}
+template<class T> const Vector2<T>& Segment<T>::p2()const{return p2_;}
+template<class T> T Segment<T>::x1()const{return p1().x();}
+template<class T> T Segment<T>::y1()const{return p1().y();}
+template<class T> T Segment<T>::x2()const{return p2().x();}
+template<class T> T Segment<T>::y2()const{return p2().y();}
+template<class T> void Segment<T>::set(T x1,T y1,T x2, T y2){ p1_.set(x1,y1); p2_.set(x2,y2); }
+
+template<class T> Rect<T>::Rect( T x, T y, T w, T h):pos_(x, y), size_(w, h) { }
+template<class T> const Vector2<T>& Rect<T>::getPos()const { return pos_; }
+template<class T> const Vector2<T>& Rect<T>::getSize()const { return size_; }
+template<class T> void Rect<T>::setPos(const Vector2<T> &pos){ pos_ = pos; }
+template<class T> void Rect<T>::setSize(const Vector2<T> &size){ size_ = size; }
+template<class T> void Rect<T>::setX(T x){pos_.setX(x);}
+template<class T> void Rect<T>::setY(T y){pos_.setY(y);}
+template<class T> void Rect<T>::setWidth(T w){size_.setX(w);}
+template<class T> void Rect<T>::setHeight(T h){size_.setY(h);}
+template<class T> T Rect<T>::x()const{return pos_.x();}
+template<class T> T Rect<T>::y()const{return pos_.y();}
+template<class T> T Rect<T>::getWidth()const{return size_.x();}
+template<class T> T Rect<T>::getHeight()const{return size_.y();}
+template<class T> T Rect<T>::getTop()const{ return pos_.y(); }
+template<class T> T Rect<T>::getBottom()const{ return pos_.y()+size_.y(); }
+template<class T> T Rect<T>::getLeft()const{ return pos_.x(); }
+template<class T> T Rect<T>::getRight()const{ return pos_.x()+size_.x(); }
+
+template<class T> bool Rect<T>::isContain(const Vector2<T> &p )const{
+  bool r=getLeft() <= p.x() && getRight()  >= p.x() && 
+         getTop()  <= p.y() && getBottom() >= p.y();
+  return r;
+}
+
+template<class T> bool cmpY(const Segment<T>& s1, const Segment<T>& s2){ return s1.p1().y() < s2.p1().y(); }
+
+template<class T> float getDistSqr(const Vector2<T>& p1, const Vector2<T>& p2){
+  return static_cast<float>( (p1.x()-p2.x())*(p1.x()-p2.x())+(p1.y()-p2.y())*(p1.y()-p2.y()) );
+}
+
+template<class T> float getDist(const Vector2<T>& p1, const Vector2<T>& p2){
+  return sqrt(getDistSqr(p1,p2));
+}
+
+template<class T> float getDist(const Vector2<T>& p1, const Segment<T>& s1){
+  float a = getDistSqr(p1, s1.p1());
+  float b = getDistSqr(p1, s1.p2());
+  float c = static_cast<float>( s1.getWidth()*s1.getWidth() );
+  if(a>=b+c) return sqrt(b);
+  if(b>=a+c) return sqrt(a);
+  a=sqrt(a); b=sqrt(b); c=sqrt(c);
+  float p = (a+b+c)/2.0f;
+  float s = sqrt(p*(p-a)*(p-b)*(p-c));
+  float h = s*2.0f/c;
+  return h;
+
+  //float A=s1.y1()-s1.y2();
+  //float B=s1.x2()-s1.x1();
+  //float C=s1.x1()*s1.y2()-s1.x2()*s1.y1();
+  //float n = (A*p1.x()+B*p1.y()+C);
+  //float d = (float)(A*p1.x()+B*p1.y()+C)/sqrt(A*A+B*B);
+  //return d;
+}
+
+template<class T> float getDist(const Segment<T>& s1, const Segment<T>& s2){
+  float d1 = getDist(s1.p1(),s2);
+  float d2 = getDist(s1.p2(),s2);
+  float d3 = getDist(s2.p1(),s1);
+  float d4 = getDist(s2.p2(),s1);
+  return std::min( std::min(d1,d2), std::min(d3,d4) );
+}
+
+//http://e-maxx.ru/algo/segments_intersection_checking
+template<class T> int area (const Vector2<T>& a, const Vector2<T>& b, const Vector2<T>& c) {
+	return (int)(b.x() - a.x()) * (c.y() - a.y()) - (b.y() - a.y()) * (c.x() - a.x());
+}
+inline bool intersect_1 (int a, int b, int c, int d) {
+	if (a > b)  std::swap (a, b);
+	if (c > d)  std::swap (c, d);
+	return std::max(a,c) <= std::min(b,d);
+} 
+template<class T> bool intersect (const Vector2<T>& a, const Vector2<T>& b, const Vector2<T>& c, const Vector2<T>& d) {
+	return intersect_1 (a.x(), b.x(), c.x(), d.x())
+		&& intersect_1 (a.y(), b.y(), c.y(), d.y())
+		&& area(a,b,c) * area(a,b,d) <= 0
+		&& area(c,d,a) * area(c,d,b) <= 0;
+}
+
+template<class T> bool IsIntersect(const Segment<T>& s1, const Segment<T>& s2){
+  return intersect(s1.p1(),s1.p2(),s2.p1(),s2.p2());
+}
+template<class T> bool IsIntersect(const Segment<T>& s, const Rect<T>& r){
+  Segment<T> s1(r.getRight(),r.getTop(),r.getRight(),r.getBottom());
+  Segment<T> s2(r.getLeft(),r.getTop(),r.getLeft(),r.getBottom());
+  return IsIntersect(s, s1) || IsIntersect(s, s2);
+}
+template<class T> bool IsIntersect(const Rect<T>& r, const Segment<T>& s){
+  return IsIntersect(s,r);
+}
+template<class T> bool IsIntersect(const Rect<T>& r1, const Rect<T>& r2){
+  return true;// todo
+}
+
+//class LineEquation{
+//  float A,B,C;
+//public:
+//  LineEquation(Segment<float> s){
+//    A=s.y1()-s.y2();
+//    B=s.x2()-s.x1();
+//    C=s.x1()*s.y2()-s.x2()*s.y1();
+//  }
+//};
 
 #endif

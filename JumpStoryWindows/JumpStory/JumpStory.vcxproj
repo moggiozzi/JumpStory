@@ -75,6 +75,7 @@
     <ClCompile Include="..\..\JumpStory\jni\AudioHelper.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\Character.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\CollisionLayer.cpp" />
+    <ClCompile Include="..\..\JumpStory\jni\Fps.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\Game.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\GameState.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\GLHelper.cpp" />
@@ -85,12 +86,15 @@
     <ClCompile Include="..\..\JumpStory\jni\ResourceManager.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\Sound.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\Sprite.cpp" />
+    <ClCompile Include="..\..\JumpStory\jni\Texture.cpp" />
     <ClCompile Include="..\..\JumpStory\jni\World.cpp" />
+    <ClCompile Include="..\..\JumpStory\jni\WorldInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\JumpStory\jni\AudioHelper.h" />
     <ClInclude Include="..\..\JumpStory\jni\Character.h" />
     <ClInclude Include="..\..\JumpStory\jni\CollisionLayer.h" />
+    <ClInclude Include="..\..\JumpStory\jni\Fps.h" />
     <ClInclude Include="..\..\JumpStory\jni\Game.h" />
     <ClInclude Include="..\..\JumpStory\jni\GameState.h" />
     <ClInclude Include="..\..\JumpStory\jni\GLHelper.h" />
@@ -100,7 +104,9 @@
     <ClInclude Include="..\..\JumpStory\jni\ResourceManager.h" />
     <ClInclude Include="..\..\JumpStory\jni\Sound.h" />
     <ClInclude Include="..\..\JumpStory\jni\Sprite.h" />
+    <ClInclude Include="..\..\JumpStory\jni\Texture.h" />
     <ClInclude Include="..\..\JumpStory\jni\World.h" />
+    <ClInclude Include="..\..\JumpStory\jni\WorldInfo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -83,7 +83,6 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
       }
       // Also stop animating.
       engine->animating = 0;
-      game.draw();
     break;
     case APP_CMD_CONFIG_CHANGED:
     break;
@@ -91,8 +90,9 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
     break;
     case APP_CMD_START:
     break;
-    case APP_CMD_RESUME:
-    break;
+    case APP_CMD_RESUME:{
+      int d=1;
+    }break;
     case APP_CMD_SAVE_STATE:
       //engine->app->savedState = malloc(sizeof(struct saved_state));
       //*((struct saved_state*)engine->app->savedState) = engine->state;
@@ -110,8 +110,8 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
 void android_main(struct android_app* state) {
 #ifndef NDEBUG
   // ожидание подключения отладчика
-//  volatile bool bGo = false; // поймать
-  volatile bool bGo = true; // не ловить
+  volatile bool bGo = false; // поймать
+  //volatile bool bGo = true; // не ловить
   while(!bGo) {
     sleep(1);
   }

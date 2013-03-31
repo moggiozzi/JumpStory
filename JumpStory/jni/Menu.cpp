@@ -19,7 +19,7 @@ const char* pathToEntryTexture[entryCount] = {
 
 Texture entryTextures[ entryCount ];
 Texture onTex, offTex;
-Rect    entryRects   [ entryCount ];
+Rect<int> entryRects   [ entryCount ];
 
 bool Menu::init(){
   bool res = true;
@@ -29,38 +29,40 @@ bool Menu::init(){
   {    
     ResourceManager::loadImage(pathToEntryTexture[i], &entryTextures[i]);
 
-    entryRects[i].size = entryTextures[i].size;
-    if ( entryRects[i].width > GLHelper::getWidth() )
-      entryRects[i].width = GLHelper::getWidth();
-    entryRects[i].x = (GLHelper::getWidth() - entryRects[i].width) / 2;
+    entryRects[i].setSize( entryTextures[i].size );
+    if ( entryRects[i].getWidth() > GLHelper::getWidth() )
+      entryRects[i].setWidth( GLHelper::getWidth() );
+    entryRects[i].setX((GLHelper::getWidth() - entryRects[i].getWidth()) / 2);
     if ( i>0 )
-      entryRects[i].y = entryRects[i-1].getBottom() + 20;
+      entryRects[i].setY( entryRects[i-1].getBottom() + 20 );
     else
-      entryRects[i].y = 20;
+      entryRects[i].setY( 20 );
   }
   return res;
 }
 
 void Menu::draw(){
+  GLHelper::setColor(1.0f,1.0f,1.0f);
   for ( uint i=0; i<entryCount; i++) {
     GLHelper::drawTexture(&entryTextures[i], entryRects[i]);
     if ( i == ME_SOUND )
     {
       if ( getSoundState() == true )
-        GLHelper::drawTexture(&onTex, entryRects[i].getRight()+5, entryRects[i].y);
+        GLHelper::drawTexture(&onTex, entryRects[i].getRight()+5, entryRects[i].y());
       else
-        GLHelper::drawTexture(&offTex, entryRects[i].getRight()+5, entryRects[i].y);
+        GLHelper::drawTexture(&offTex, entryRects[i].getRight()+5, entryRects[i].y());
     }
   }
 }
 
 void Menu::touch(int x, int y){
+  Vector2<int> p(x,y);
   GameState gState = getGameState();
-  if ( entryRects[ ME_PLAY ].isContain( x, y ) )
+  if ( entryRects[ ME_PLAY ].isContain( p ) )
     setGameState( GS_INITLEVEL );
-  else if ( entryRects[ ME_SOUND ].isContain( x, y ) )
+  else if ( entryRects[ ME_SOUND ].isContain( p ) )
     changeSoundState();
-  else if ( entryRects[ ME_EXIT ].isContain( x, y ) )
+  else if ( entryRects[ ME_EXIT ].isContain( p ) )
     setGameState( GS_EXIT );
 }
 

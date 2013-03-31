@@ -7,11 +7,11 @@
 
 class World{
   float g;
-  Vector2 bottomLeft; // координаты нижней левой точки с которой надо рисовать "мир"
+  Vector2<int> bottomLeft; // координаты нижней левой точки с которой надо рисовать "мир"
   CollisionLayer collisionLayer;
   Character *character;
 
-  Vector2f charPos, charSpeed, charMaxSpeed, worldSpeed;
+  Vector2<float> charPos, charSpeed, charMaxSpeed, worldSpeed;
 public:
   World() : character(0) {}
   ~World(){}
