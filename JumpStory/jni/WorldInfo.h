@@ -8,6 +8,8 @@
 extern float maxJumpHeight;
 extern Vector2<float> worldPos;
 extern float worldMaxY;
+extern Vector2<float> worldSpeed;
+extern float g;
 int worldToDeviceX(float x);
 int worldToDeviceY(float y);
 Vector2<int> worldToDevice(Vector2<float> pos);

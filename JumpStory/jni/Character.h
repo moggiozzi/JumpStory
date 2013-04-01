@@ -7,22 +7,41 @@
 #ifndef SPRITE_H_
 #include "Sprite.h"
 #endif
+#ifndef WORLD_INFO_H_
+#include "WorldInfo.h"
+#endif
+#ifndef COLLISION_LAYER_H_
+#include "CollisionLayer.h"
+#endif
 
 class Character{
   Vector2<float> pos;
-  Vector2<float> speed;
+  Vector2<float> speed, maxSpeed;
   Sprite *sprite;
+  float maxJumpHeight;
 public:
   Character(Texture *charTex);
   ~Character();
   void draw();
-  void update(float dt);
+  void update(float dt, CollisionLayer& collisionLayer);
 
   void setPos(float x, float y){ pos.set(x,y); }
+  void setPosX(float x){ pos.setX(x); }
+  void setPosY(float y){ pos.setY(y); }
   int getWidth(){return sprite->getWidth();}
   int getHeight(){return sprite->getHeight();}
-  float getX(){return pos.x();}
-  float getY(){return pos.y();}
+  float getPosX(){return pos.x();}
+  float getPosY(){return pos.y();}
+  Vector2<float> getSpeed(){return speed;}
+  void setSpeed(float x, float y){speed.set(x,y);}
+  void setSpeedX(float x){speed.setX(x);}
+  void setSpeedY(float y){speed.setY(y);}
+  Vector2<float> getMaxSpeed(){return maxSpeed;}
+  void setMaxSpeed(float x, float y){
+    maxSpeed.set(x,y);
+    maxJumpHeight = maxSpeed.y()*maxSpeed.y()/(2.0f*g) - getHeight();
+  }
+
 };
 
 #endif // CHARACTER_H_

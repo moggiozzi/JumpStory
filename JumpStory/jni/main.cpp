@@ -110,8 +110,8 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
 void android_main(struct android_app* state) {
 #ifndef NDEBUG
   // ожидание подключения отладчика
-  volatile bool bGo = false; // поймать
-  //volatile bool bGo = true; // не ловить
+//  volatile bool bGo = false; // поймать
+  volatile bool bGo = true; // не ловить
   while(!bGo) {
     sleep(1);
   }
@@ -235,6 +235,8 @@ void draw(void)
 
 int main(int argc, char* argv[])
 {
+#include "Tests.h"
+  testGetDist();
   glutInit( &argc, argv );
   glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE | GLUT_BORDERLESS);
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,GLUT_ACTION_GLUTMAINLOOP_RETURNS);

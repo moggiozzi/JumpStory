@@ -67,9 +67,17 @@ void Menu::touch(int x, int y){
 }
 
 bool Menu::keyDown(uint keyCode){
-  if (keyCode == KEY_ESC){
-    setGameState(GS_EXIT);
-    return true;
+  switch (keyCode)
+  {
+    case KEY_ESC:
+      setGameState(GS_EXIT);
+      return true;
+    break;
+    case KEY_ENTER:
+      setGameState(GS_INITLEVEL);
+      return true;
+    break;
+    default:
+      return false;
   }
-  return false;
 }

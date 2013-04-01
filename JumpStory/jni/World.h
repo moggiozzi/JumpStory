@@ -12,12 +12,9 @@
 #endif
 
 class World{
-  float g;
   Vector2<int> bottomLeft; // координаты нижней левой точки с которой надо рисовать "мир"
   CollisionLayer collisionLayer;
   Character *character;
-
-  Vector2<float> charPos, charSpeed, charMaxSpeed, worldSpeed;
 public:
   World() : character(0) {}
   ~World(){}

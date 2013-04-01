@@ -15,7 +15,7 @@ bool Game::init(){
   int sId;
   res = res && AudioHelper::open("res/main.ogg",sId);
   AudioHelper::update();
-  AudioHelper::play(sId);
+  AudioHelper::play(sId,false); // todo true
   return res;
 }
 

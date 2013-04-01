@@ -8,6 +8,8 @@
 #define platformTypeCnt 4
 int widthTypes[platformTypeCnt]={ 64, 128, 192, 64 };
 Texture textures[4];
+const int platformHeight = 64;
+uint highestSegmentIdx = 0;
 
 CollisionLayer::CollisionLayer(){
 }
@@ -66,7 +68,6 @@ void CollisionLayer::initLevel(){
   Segment<int> s(-100,0,GLHelper::getWidth()+100,0);
   segments.push_back(s);
 
-  int platformHeight = 64;
   uint w = GLHelper::getWidth();
   int y = 0, x1, x2;
   while(y<GLHelper::getHeight()*2)
@@ -74,19 +75,27 @@ void CollisionLayer::initLevel(){
     int k = rand()%3;
     x1 = rand()%(w - widthTypes[k]);
     x2 = x1 + widthTypes[k];
-    y = y + rand() % ((int)maxJumpHeight-64)+64;
+    y = y + rand() % ((int)maxJumpHeight-platformHeight)+platformHeight;
     segments.push_back(Segment<int>(x1,y,x2,y));
+    //uint n = segments.size();
+    //if ( n>1 )
+    //  if ( getDist(segments[n-1],segments[n-2]) < platformHeight ) {
+    //    y += platformHeight;
+    //    segments[n-1].setY(y);
+    //  }
   }
+  highestSegmentIdx = segments.size()-1;
 }
 
 void CollisionLayer::update(){
   for(uint i=0;i<segments.size();i++){
-    if(worldPos.y() - segments[i].y1() > 64){
+    if(worldPos.y() - segments[i].y1() > 2*platformHeight ){
       int k = rand()%3;
       int x1 = rand()%(GLHelper::getWidth() - widthTypes[k]);
       int x2 = x1 + widthTypes[k];
-      int y = segments[i].y1() + GLHelper::getHeight()*2+64;
+      int y = segments[highestSegmentIdx].y1() + rand() % ((int)maxJumpHeight-platformHeight)+platformHeight;
       segments[i].set(x1, y, x2, y);
+      highestSegmentIdx = i;
     }
   }
 }

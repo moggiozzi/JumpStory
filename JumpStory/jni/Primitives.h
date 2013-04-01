@@ -8,11 +8,13 @@
 
 #ifdef __ANDROID__
 #define KEY_ESC   AKEYCODE_BACK
+#define KEY_ENTER 0
 #define KEY_LEFT  AKEYCODE_DPAD_LEFT
 #define KEY_RIGHT AKEYCODE_DPAD_RIGHT
 #else
 #include <GL/freeglut.h>
 #define KEY_ESC   27
+#define KEY_ENTER 13
 #define KEY_LEFT  GLUT_KEY_LEFT
 #define KEY_RIGHT GLUT_KEY_RIGHT
 #endif
@@ -45,6 +47,17 @@ public:
   void setY(T y);
   Vector2(T x = 0, T y = 0);
   Vector2(const Vector2<int>& vi):x_(vi.x()),y_(vi.y()){}
+  // todo explicit int to float convertion
+  //explicit Vector2<T>::operator Vector2<float>(const Vector2<T>& vi) const
+  //{
+  //  Vector2<float> vf( static_cast<float>(vi.x()), static_cast<float>(vi.y()));
+  //  return vf;
+  //}
+  //Vector2 & operator =(const Vector2<T>& v) {
+  //  x_=v.x(); 
+  //  y_=v.y();
+  //  return *this;
+  //}
 };
 
 template<class T>
@@ -62,9 +75,11 @@ public:
   T y2()const;
   Segment(T x1=0, T y1=0, T x2=0, T y2=0);
   Segment(const Vector2<T>& p1, const Vector2<T>& p2);
+  //todo explicit int to float
   Segment(const Segment<int>& si):p1_(si.p1()),p2_(si.p2()){}
   T getWidth()const;
   void set(T x1,T y1,T x2, T y2);
+  void setY(T y);
 };
 template<class T>
 bool cmpY(Segment<T>& s1, Segment<T>& s2);
@@ -118,6 +133,7 @@ template<class T> T Segment<T>::y1()const{return p1().y();}
 template<class T> T Segment<T>::x2()const{return p2().x();}
 template<class T> T Segment<T>::y2()const{return p2().y();}
 template<class T> void Segment<T>::set(T x1,T y1,T x2, T y2){ p1_.set(x1,y1); p2_.set(x2,y2); }
+template<class T> void Segment<T>::setY(T y){ p1_.setY(y); p2_.setY(y); }
 
 template<class T> Rect<T>::Rect( T x, T y, T w, T h):pos_(x, y), size_(w, h) { }
 template<class T> const Vector2<T>& Rect<T>::getPos()const { return pos_; }
