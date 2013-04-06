@@ -74,6 +74,7 @@
     <ClCompile Include="jni\Global.cpp" />
     <ClCompile Include="jni\main.cpp" />
     <ClCompile Include="jni\Menu.cpp" />
+    <ClCompile Include="jni\Mummy.cpp" />
     <ClCompile Include="jni\Primitives.cpp" />
     <ClCompile Include="jni\ResourceManager.cpp" />
     <ClCompile Include="jni\Sound.cpp" />
@@ -92,6 +93,7 @@
     <ClInclude Include="jni\GLHelper.h" />
     <ClInclude Include="jni\Global.h" />
     <ClInclude Include="jni\Menu.h" />
+    <ClInclude Include="jni\Mummy.h" />
     <ClInclude Include="jni\Primitives.h" />
     <ClInclude Include="jni\ResourceManager.h" />
     <ClInclude Include="jni\Sound.h" />

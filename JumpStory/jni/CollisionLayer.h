@@ -4,11 +4,11 @@
 #ifndef PRIMITIVES_H_
 #include "Primitives.h"
 #endif
-
 #include <vector>
 
+typedef std::vector< Segment<int> > Segments;
 class CollisionLayer{
-  std::vector< Segment<int> > segments;
+  Segments segments;
   void generate();
 public:
   CollisionLayer();
@@ -17,6 +17,7 @@ public:
   void initLevel();
   void draw();
   void update();
+  const Segments getSegments(){ return segments; }
 };
 
 #endif

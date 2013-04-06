@@ -141,6 +141,8 @@ bool AudioHelper::destroy(){
 }
 
 bool AudioHelper::open(const char *file, int &soundId, bool isStreamed){
+  if (!isInit)
+    return false;
   Sound *sound = new Sound();
   if (!sound || !sound->Open(file, isStreamed)) {
     LOGI("Sound %s not open", file);
@@ -156,7 +158,11 @@ Sound* AudioHelper::getSound(int soundId){
   std::map<int,Sound*>::iterator it = sounds.find(soundId);
   if (it!=sounds.end())
     return it->second;
-  LOGI("Sound with id=%d not found", soundId);
+  static bool shouldErrReport=true;
+  if (shouldErrReport) {
+    shouldErrReport = false;
+    LOGI("Sound with id=%d not found", soundId);
+  }
   return 0;
 }
 

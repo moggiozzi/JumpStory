@@ -58,7 +58,24 @@ public:
   //  y_=v.y();
   //  return *this;
   //}
+  template <class T1>
+  operator Vector2<T1>()
+  {
+      return Vector2<T1>(x_,y_);
+  }
 };
+
+//const Vecor2<> operator (){
+//  Vecor2<int> v(x_,y_);
+//  return v;
+//}
+
+
+//template<class T, class U>
+//const Vector2<T> operator()(const Vector2<U>& v){
+//  Vector2<T> vv(v.x(),v.y());
+//  return vv;
+//}
 
 template<class T>
 Vector2<T> operator - (const Vector2<T>& l, const Vector2<T>& r);
@@ -98,6 +115,7 @@ public:
   T getHeight()const;
   void setPos(const Vector2<T> &pos);
   void setSize(const Vector2<T> &size);
+  void set(T x, T y, T w, T h){pos_.set(x,y);size_.set(w,h);}
   void setX(T x);
   void setY(T y);
   void setWidth(T w);

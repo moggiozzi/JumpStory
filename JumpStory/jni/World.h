@@ -11,17 +11,21 @@
 #include "Character.h"
 #endif
 
+#include "Mummy.h"
+
 class World{
   Vector2<int> bottomLeft; // координаты нижней левой точки с которой надо рисовать "мир"
   CollisionLayer collisionLayer;
   Character *character;
+  Mummy *mummy;
+  uint score;
 public:
   World() : character(0) {}
   ~World(){}
   //Vector2f getSize(){return size;}
   bool init();
   void initLevel();
-  void draw();
+  void draw(bool isActive=true);
   void update(float dt);
   bool keyDown(uint keyCode);
   void touch(int x, int y);

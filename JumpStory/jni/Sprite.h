@@ -15,7 +15,7 @@ public:
   int getWidth(){ return texture_->getWidth(); }
   int getHeight(){return texture_->getHeight();}
   void draw(int x, int y);
-  void draw(Vector2<int>& pos);
+  void draw(Vector2<int>& pos, float angle = 0.0f);
   //void draw(int x, int y, int w, int h);
 };
 

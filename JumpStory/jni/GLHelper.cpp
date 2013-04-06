@@ -244,10 +244,13 @@ void GLHelper::drawTexture(Texture* texture, int dx, int dy, int dw, int dh,
   isglerr("err");
 }
 
+void GLHelper::drawText(const Vector2<int>& pos, const char* text, uint size){
+  drawText(pos.x(), pos.y(), text, size);
+}
 void GLHelper::drawText(int x, int y, const char* text, uint size){
   uint len = strnlen(text,255);
-  uint fontTextureSize = 256;
-  uint glyphSize = 16;
+  uint fontTextureSize = fontTexture.getWidth();
+  uint glyphSize = fontTextureSize/16;
   float textureCoords[8];
   glEnable (GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, fontTexture.texNameGl);

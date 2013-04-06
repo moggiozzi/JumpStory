@@ -6,7 +6,7 @@
 #include "GameState.h"
 
 Game::Game(){}
-
+Texture bgTex;
 bool Game::init(){
   bool res = true;
   setGameState(GS_MENU);
@@ -16,24 +16,39 @@ bool Game::init(){
   res = res && AudioHelper::open("res/main.ogg",sId);
   AudioHelper::update();
   AudioHelper::play(sId,false); // todo true
+
+  ResourceManager::loadImage("res/bg.png",&bgTex);
+
   return res;
 }
 
 void Game::drawFps(){
   static char str[16];
   sprintf(str,"fps:%d",fps.getFps());
+  GLHelper::setColor(1.f,1.f,1.f);
   GLHelper::drawText(0, 0, str);
 }
 
 void Game::draw(){
   GLHelper::clear(0, 0, 0);
+
+  GLHelper::setColor(0.6f,0.6f,1.0f);
+  uint x = (GLHelper::getWidth() - bgTex.getWidth())/2;
+  uint y = (GLHelper::getHeight() - bgTex.getHeight())/2;
+  GLHelper::drawTexture(&bgTex, x, y);
+
   GameState gState = getGameState();
   switch (gState)
   {
   case GS_INGAME:
     world.draw();
     break;
-  default:
+  case GS_PAUSE:
+    world.draw(true);
+    menu.draw();
+    break;
+  case GS_MENU: case GS_GAMEOVER:
+    world.draw(false);
     menu.draw();
     break;
   }
@@ -52,7 +67,7 @@ void Game::update(float dt){
   case GS_INITLEVEL:
     world.initLevel();
     setGameState( GS_INGAME );
-    //break;
+    break;
   case GS_INGAME:
     world.update(dt);
     break;

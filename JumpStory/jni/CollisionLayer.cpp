@@ -57,8 +57,8 @@ void CollisionLayer::draw(){
         x+=widthTypes[j];
       }
     }
-    GLHelper::drawLine2d( worldToDeviceX((float)segments[i].x1()), worldToDeviceY((float)segments[i].y1()),
-      worldToDeviceX((float)segments[i].x2()), worldToDeviceY((float)segments[i].y2()) );
+    //GLHelper::drawLine2d( worldToDeviceX((float)segments[i].x1()), worldToDeviceY((float)segments[i].y1()),
+    //  worldToDeviceX((float)segments[i].x2()), worldToDeviceY((float)segments[i].y2()) );
   }
 }
 

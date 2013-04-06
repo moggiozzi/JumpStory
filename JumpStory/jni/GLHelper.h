@@ -61,6 +61,7 @@ public:
   static void drawTexture(Texture* texture, Rect<int> &dr);
   static void drawTexture(Texture* texture, Vector2<int> &pos, float angle=0);
 
+  static void drawText(const Vector2<int>& pos, const char* text, uint size);
   static void drawText(int x, int y, const char* text, uint size=16);
 };
 
