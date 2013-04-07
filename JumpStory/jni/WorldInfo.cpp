@@ -4,7 +4,7 @@
 Vector2<float> worldPos;
 Vector2<float> worldSpeed;
 float worldMaxY;
-float maxJumpHeight;
+Vector2<float> maxJumpDist;
 float g=400.0f;
 int worldToDeviceX(float x){
   return (int)(x-worldPos.x());

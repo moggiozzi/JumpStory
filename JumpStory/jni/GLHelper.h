@@ -22,6 +22,7 @@
 #endif
 
 class GLHelper{
+  static bool isInit;
 #define MAX_POINTS_COUNT 64
   static float points_[MAX_POINTS_COUNT];
 
@@ -48,6 +49,8 @@ public:
 
   static int getWidth(){return width;}
   static int getHeight(){return height;}
+  static void setWidth(int w){width=w;}
+  static void setHeight(int h){height=h;}
 
   static void clear(GLfloat r=0, GLfloat g=0, GLfloat b=0, GLfloat a=1);
   static void setColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a=1);

@@ -9,6 +9,9 @@ namespace{
   Vector2<float> ghostPos;
 }
 
+#define charMaxSpeedX 200.0f
+#define charMaxSpeedY 400.0f
+
 bool World::init(){
   ResourceManager::loadImage("res/character.png",&charTex);
   //ResourceManager::loadImage("res/bg.png",&bgTex);
@@ -18,6 +21,10 @@ bool World::init(){
     delete character;
   character = new Character(&charTex);
   mummy = new Mummy(&mummyTex);
+
+  maxJumpDist.setY( charMaxSpeedY*charMaxSpeedY/(2.0f*g) - character->getHeight() );
+  maxJumpDist.setX( maxJumpDist.y() );
+
   collisionLayer.init();
   initLevel();
   return true;
@@ -27,7 +34,7 @@ void World::initLevel(){
   score = 0;
   character->setPos(50.0f,50.0f+character->getHeight());
   character->setSpeed(0.0f, 0.0f);
-  character->setMaxSpeed(200.0f, 400.0f);
+  character->setMaxSpeed(charMaxSpeedX, charMaxSpeedY);
 
   worldPos.set(0.0f, character->getPosY() - character->getHeight()/2.0f - GLHelper::getHeight()/2.0f);
   worldPos.setY(-64);
@@ -69,7 +76,7 @@ void World::update(float dt){
   character->update(dt, collisionLayer);
 
   if ( score < character->getPosY() )
-    score = character->getPosY();
+    score = (uint)character->getPosY();
 
   mummy->update(dt, collisionLayer);
 
@@ -77,7 +84,6 @@ void World::update(float dt){
   float nWorldY = character->getPosY() - character->getHeight()/2 - GLHelper::getHeight()/2;
   float d = nWorldY-worldPos.y();
   worldSpeed.setY(d*3.0f*character->getMaxSpeed().y()/GLHelper::getHeight());
-  //if ( worldY + worldSpeed.y*dt > worldMaxY-64 )
   worldPos.setY(worldPos.y() + worldSpeed.y()*dt);
   if ( worldPos.y() > worldMaxY )
     worldMaxY = worldPos.y();
@@ -85,10 +91,12 @@ void World::update(float dt){
   collisionLayer.update();
 
   // враги
+  static float ga = 0.0f;
+  ga+=dt*5;
   ghostPos.setX( ghostPos.x() + g/4*dt );
   if( ghostPos.x() > GLHelper::getWidth())
     ghostPos.setX( -(float)ghostTex.getWidth() );
-  ghostPos.setY( ghostPos.y() + g/4*dt );
+  ghostPos.setY( ghostPos.y() + g/4*dt + sin(ga)/2 );
   if(ghostPos.y()-worldPos.y()-ghostTex.getHeight()>GLHelper::getHeight())
     ghostPos.setY( worldPos.y() );
 }
@@ -116,4 +124,38 @@ void World::touch(int x, int y){
     keyDown(KEY_LEFT);
   else
     keyDown(KEY_RIGHT);
+}
+
+void World::accel(float x, float y, float z){
+  character->setSpeedX( -x/2.0f * character->getMaxSpeed().x() );
+}
+
+uint World::getSaveDataSize(){
+  uint dataSize =
+		  collisionLayer.getSaveDataSize() +
+		  3*sizeof(Vector2<float>);
+  return dataSize;
+}
+void World::saveTo(char *data){
+  *((Vector2<float>*)data) = character->getPos();
+  data += sizeof(Vector2<float>);
+  *((Vector2<float>*)data) = ghostPos;
+  data += sizeof(Vector2<float>);
+  *((Vector2<float>*)data) = worldPos;
+  data += sizeof(Vector2<float>);
+  collisionLayer.saveTo(data);
+}
+void World::loadFrom(const char *data, const char * const dataEnd){
+  int s = 3*sizeof(Vector2<float>);
+  if (dataEnd < data+s) {
+    LOGI("Error: World::loadFrom() not valid data");
+    return;
+  }
+  character->setPos( *((Vector2<float>*)data) );
+  data += sizeof(Vector2<float>);
+  ghostPos.set( *((Vector2<float>*)data) );
+  data += sizeof(Vector2<float>);
+  worldPos.set( *((Vector2<float>*)data) );
+  data += sizeof(Vector2<float>);
+  collisionLayer.loadFrom(data, dataEnd);
 }

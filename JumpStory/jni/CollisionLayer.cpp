@@ -61,7 +61,29 @@ void CollisionLayer::draw(){
     //  worldToDeviceX((float)segments[i].x2()), worldToDeviceY((float)segments[i].y2()) );
   }
 }
-
+void CollisionLayer::check(int curr, int prev){
+  float d = getDist(segments[curr],segments[prev]);
+  int w = GLHelper::getWidth();
+  int y = segments[curr].y1();
+  if ( d > maxJumpDist.x() ){
+    int sw = segments[curr].getWidth();
+    int rx1 = segments[prev].x1()-maxJumpDist.x()-sw;
+    rx1 = rx1<0 ? 0 : rx1;
+    int rx2 = segments[prev].x2()+maxJumpDist.x();
+    rx2 = rx2 > w-sw ? w-sw : rx2;
+    int x = rx1 + rand()%(rx2-rx1);
+    segments[curr].set(x,y,x+sw,y);
+    d = getDist(segments[curr],segments[prev]);
+      //Segment<int> s(x,y,x+widthTypes[k],y);
+    //float d2 = getDist(s,segments[n-2]);
+    //if (d2>maxJumpDist.x())
+    //  int ddd=1;
+  }
+  if ( d < platformHeight ) {
+    y += platformHeight;
+    segments[curr].setY(y);
+  }
+}
 void CollisionLayer::initLevel(){
   segments.clear();
 
@@ -75,27 +97,64 @@ void CollisionLayer::initLevel(){
     int k = rand()%3;
     x1 = rand()%(w - widthTypes[k]);
     x2 = x1 + widthTypes[k];
-    y = y + rand() % ((int)maxJumpHeight-platformHeight)+platformHeight;
+    y = y + rand() % ((int)maxJumpDist.y()-platformHeight)+platformHeight;
     segments.push_back(Segment<int>(x1,y,x2,y));
-    //uint n = segments.size();
-    //if ( n>1 )
-    //  if ( getDist(segments[n-1],segments[n-2]) < platformHeight ) {
-    //    y += platformHeight;
-    //    segments[n-1].setY(y);
-    //  }
+    uint n = segments.size();
+    if ( n>1 ) {
+      check(n-1,n-2);
+    }
   }
   highestSegmentIdx = segments.size()-1;
 }
 
 void CollisionLayer::update(){
   for(uint i=0;i<segments.size();i++){
-    if(worldPos.y() - segments[i].y1() > 2*platformHeight ){
+    if(worldPos.y() - segments[i].y1() > 2*platformHeight ) {
       int k = rand()%3;
       int x1 = rand()%(GLHelper::getWidth() - widthTypes[k]);
       int x2 = x1 + widthTypes[k];
-      int y = segments[highestSegmentIdx].y1() + rand() % ((int)maxJumpHeight-platformHeight)+platformHeight;
+      int y = segments[highestSegmentIdx].y1() + rand() % ((int)maxJumpDist.y()-platformHeight)+platformHeight;
       segments[i].set(x1, y, x2, y);
       highestSegmentIdx = i;
+      check( i, (i>0 ? i-1: segments.size()-1) );
     }
+  }
+}
+
+uint CollisionLayer::getSaveDataSize(){
+  //n; (pos,length),(pos,length),...
+  return sizeof(uint)+segments.size()*(sizeof(Vector2<int>)+sizeof(uint));
+}
+void CollisionLayer::saveTo(char *data){
+  *((uint*)data) = segments.size();
+  data += sizeof(uint);
+  for(uint i=0;i<segments.size();i++){
+    *((Vector2<int>*)data) = segments[i].p1();
+    data += sizeof(Vector2<int>);
+    *((int*)data) = segments[i].getWidth();
+    data += sizeof(int);
+  }
+}
+void CollisionLayer::loadFrom(const char *data, const char * const dataEnd){
+  if (dataEnd < data+sizeof(uint)) {
+    LOGI("Error: CollisionLayer::loadFrom() not valid data");
+    return;
+  }
+  uint n = *((uint*)data);
+  data += sizeof(uint);
+  int dl = n*(sizeof(Vector2<int>)+sizeof(int));
+  if (dataEnd < data+dl) {
+    LOGI("Error: CollisionLayer::loadFrom() not valid data");
+    return;
+  }
+  segments.clear();
+  Vector2<int> pos;
+  int width;
+  for(uint i=0;i<n;i++){
+    pos = *((Vector2<int>*)data);
+    data += sizeof(Vector2<int>);
+    width = *((int*)data);
+    data += sizeof(int);
+    segments.push_back(Segment<int>(pos.x(),pos.y(),pos.x()+width,pos.y()));
   }
 }

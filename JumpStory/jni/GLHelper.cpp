@@ -8,6 +8,7 @@
 #define radToGrad(x) (x * 57.295779513082)
 #define isglerr(str) {int err; if((err=glGetError())!=GL_NO_ERROR) LOGI("%s error 0x%X", str, err);}
 
+bool GLHelper::isInit=false;
 float GLHelper::points_[MAX_POINTS_COUNT];
 Texture GLHelper::fontTexture;
 float ratioX=1, ratioY=1;
@@ -57,6 +58,7 @@ bool GLHelper::init(ANativeWindow* window){
   height = h;
   ResourceManager::loadImage("res/font.png",&fontTexture);
   setParams();
+  isInit = true;
   return true;
 }
 
@@ -80,8 +82,9 @@ void GLHelper::terminate(){
 
 #include <GL/freeglut.h>
 
-int GLHelper::width=320;
-int GLHelper::height=480;
+int GLHelper::width=400;
+int GLHelper::height=800;
+
 bool GLHelper::init() {
   setParams();
   ResourceManager::loadImage("res/font.png",&fontTexture);

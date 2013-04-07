@@ -42,6 +42,9 @@ public:
   static void play(int soundId, bool isLoop = false);
   static void stop(int soundId);
   static void update();
+  static void stopAll();
+  static void pauseAll();
+  static void resumeAll();
 };
 
 #endif

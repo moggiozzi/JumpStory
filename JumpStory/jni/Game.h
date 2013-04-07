@@ -18,6 +18,7 @@
 #endif
 
 class Game{
+  bool isInit;
   World world;
   Menu menu;
   Fps fps;
@@ -32,6 +33,12 @@ public:
 
   void touch(int x, int y);
   bool keyDown(uint keyCode);
+  void accel(float x, float y, float z);
+  void save(const char* fileName);
+  void load(const char* fileName);
+  uint getSaveDataSize();
+  void saveTo(char *data);
+  void loadFrom(const char *data, const char * const dataEnd);
 };
 
 #endif // GAME_H_

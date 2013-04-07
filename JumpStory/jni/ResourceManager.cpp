@@ -1,8 +1,9 @@
 #include "ResourceManager.h"
 #include "GLHelper.h"
 
+bool ResourceManager::isInit = false;
 uint ResourceManager::lastTextureID;
-std::map<uint, Texture*> ResourceManager::textures;
+Textures ResourceManager::textures;
 
 #ifdef __ANDROID__
 JavaVM *ResourceManager::jvm;
@@ -36,6 +37,8 @@ bool ResourceManager::init(ANativeActivity* activity) {
   //getPixels(pixels, offset, stride, x, y, width, height)
   getPixelsID = env->GetMethodID(bitmapClass, "getPixels", "([IIIIIII)V");
   isnull("getPixelsID", getPixelsID);
+  isInit = true;
+  return isInit;
 }
 
 int ResourceManager::loadImage(const char *path, Texture *tex, int format) {

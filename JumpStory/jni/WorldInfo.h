@@ -5,7 +5,7 @@
 #include "Primitives.h"
 #endif
 
-extern float maxJumpHeight;
+extern Vector2<float> maxJumpDist;
 extern Vector2<float> worldPos;
 extern float worldMaxY;
 extern Vector2<float> worldSpeed;

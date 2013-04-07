@@ -42,40 +42,18 @@ class Vector2{
 public:
   T x() const;
   T y() const;
+  void set(Vector2<T> v);
   void set(T x, T y);
   void setX(T x);
   void setY(T y);
   Vector2(T x = 0, T y = 0);
-  Vector2(const Vector2<int>& vi):x_(vi.x()),y_(vi.y()){}
-  // todo explicit int to float convertion
-  //explicit Vector2<T>::operator Vector2<float>(const Vector2<T>& vi) const
-  //{
-  //  Vector2<float> vf( static_cast<float>(vi.x()), static_cast<float>(vi.y()));
-  //  return vf;
-  //}
-  //Vector2 & operator =(const Vector2<T>& v) {
-  //  x_=v.x(); 
-  //  y_=v.y();
-  //  return *this;
-  //}
+  //Vector2(const Vector2<int>& vi):x_(vi.x()),y_(vi.y()){}
   template <class T1>
   operator Vector2<T1>()
   {
-      return Vector2<T1>(x_,y_);
+      return Vector2<T1>((T1)x_,(T1)y_);
   }
 };
-
-//const Vecor2<> operator (){
-//  Vecor2<int> v(x_,y_);
-//  return v;
-//}
-
-
-//template<class T, class U>
-//const Vector2<T> operator()(const Vector2<U>& v){
-//  Vector2<T> vv(v.x(),v.y());
-//  return vv;
-//}
 
 template<class T>
 Vector2<T> operator - (const Vector2<T>& l, const Vector2<T>& r);
@@ -92,8 +70,11 @@ public:
   T y2()const;
   Segment(T x1=0, T y1=0, T x2=0, T y2=0);
   Segment(const Vector2<T>& p1, const Vector2<T>& p2);
-  //todo explicit int to float
-  Segment(const Segment<int>& si):p1_(si.p1()),p2_(si.p2()){}
+  template<class T1>
+  operator Segment<T1>()
+  {
+      return Segment<T1>((Vector2<T1>)p1_,(Vector2<T1>)p2_);
+  }
   T getWidth()const;
   void set(T x1,T y1,T x2, T y2);
   void setY(T y);
@@ -138,12 +119,13 @@ template<class T> Vector2<T> operator - (const Vector2<T>& l, const Vector2<T>& 
   return Vector2<T>(l.x()-r.x(),l.y()-r.y());
 }
 template<class T> void Vector2<T>::set(T x, T y){ x_ = x; y_ = y; }
+template<class T> void Vector2<T>::set(Vector2<T> v){ set(v.x(),v.y()); }
 template<class T> void Vector2<T>::setX(T x){ x_ = x; }
 template<class T> void Vector2<T>::setY(T y){ y_ = y; }
 
 template<class T> Segment<T>::Segment(T x1, T y1, T x2, T y2):p1_(x1,y1),p2_(x2,y2){}
 template<class T> Segment<T>::Segment(const Vector2<T>& p1, const Vector2<T>& p2):p1_(p1),p2_(p2){}
-template<class T> T Segment<T>::getWidth()const{return getDist(p1_,p2_);}
+template<class T> T Segment<T>::getWidth()const{return (T)getDist(p1_,p2_);}
 template<class T> const Vector2<T>& Segment<T>::p1()const{return p1_;}
 template<class T> const Vector2<T>& Segment<T>::p2()const{return p2_;}
 template<class T> T Segment<T>::x1()const{return p1().x();}

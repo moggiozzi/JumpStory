@@ -9,6 +9,7 @@
 #include "ResourceManager.h"
 #include "GLHelper.h"
 #include "AudioHelper.h"
+#include <stdlib.h>
 
 clock_t lastTime=0, currentTime=0;
 
@@ -17,7 +18,7 @@ Game game;
 #ifdef __ANDROID__
 #include <unistd.h> /* sleep() */
 #include <android/sensor.h>
-//static JavaVM *jvm;
+
 JNIEnv *jni;
 struct engine {
   struct android_app* app;
@@ -25,8 +26,9 @@ struct engine {
   const ASensor* accelerometerSensor;
   ASensorEventQueue* sensorEventQueue;
   int animating;
-  //struct saved_state state;
 };
+
+const char * saveFile = "/data/data/com.example.jumpstory/save.dat";
 
 static int32_t engine_handle_input(struct android_app* app, AInputEvent* event) {
   struct engine* engine = (struct engine*)app->userData;
@@ -55,11 +57,14 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
         GLHelper::init(engine->app->window);
         AudioHelper::init(engine->app->activity);
         game.init();
+        game.load(saveFile);
         game.draw();
       }
+      engine->animating = 1;
     break;
-    case APP_CMD_TERM_WINDOW:
-    break;
+    case APP_CMD_TERM_WINDOW:{
+    	GLHelper::terminate();
+    }break;
     case APP_CMD_WINDOW_RESIZED:
     break;
     case APP_CMD_WINDOW_REDRAW_NEEDED:
@@ -75,8 +80,11 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
         ASensorEventQueue_setEventRate(engine->sensorEventQueue,
           engine->accelerometerSensor, (1000L/60)*1000);
       }
+      engine->animating = 1;
     break;
     case APP_CMD_LOST_FOCUS:
+      GLHelper::terminate();
+      AudioHelper::stopAll(); /// \todo pause/resume all
       if (engine->accelerometerSensor != NULL) {
         ASensorEventQueue_disableSensor(engine->sensorEventQueue,
           engine->accelerometerSensor);
@@ -88,29 +96,31 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
     break;
     case APP_CMD_LOW_MEMORY:
     break;
-    case APP_CMD_START:
-    break;
+    case APP_CMD_START:{
+    	int d = 1;
+    }break;
     case APP_CMD_RESUME:{
       int d=1;
     }break;
-    case APP_CMD_SAVE_STATE:
-      //engine->app->savedState = malloc(sizeof(struct saved_state));
-      //*((struct saved_state*)engine->app->savedState) = engine->state;
-      //engine->app->savedStateSize = sizeof(struct saved_state);
-    break;
-    case APP_CMD_PAUSE:
-    break;
-    case APP_CMD_STOP:
-    break;
-    case APP_CMD_DESTROY:
-    break;
+    case APP_CMD_SAVE_STATE:{
+      game.save(saveFile);
+    }break;
+    case APP_CMD_PAUSE:{
+      int p = 1;
+    }break;
+    case APP_CMD_STOP:{
+    	int s=1;
+    }break;
+    case APP_CMD_DESTROY:{
+    	int d=1;
+    }break;
   }
 }
 
 void android_main(struct android_app* state) {
 #ifndef NDEBUG
   // ожидание подключения отладчика
-//  volatile bool bGo = false; // поймать
+  //volatile bool bGo = false; // поймать
   volatile bool bGo = true; // не ловить
   while(!bGo) {
     sleep(1);
@@ -132,10 +142,6 @@ void android_main(struct android_app* state) {
     ASENSOR_TYPE_ACCELEROMETER);
   engine.sensorEventQueue = ASensorManager_createEventQueue(engine.sensorManager,
     state->looper, LOOPER_ID_USER, NULL, NULL);
-  if (state->savedState != NULL) {
-    // We are starting with a previous saved state; restore from it.
-    //engine.state = *(struct saved_state*)state->savedState;
-  }
 
   while (1) {
     // Read all pending events.
@@ -157,9 +163,10 @@ void android_main(struct android_app* state) {
             ASensorEvent event;
             while (ASensorEventQueue_getEvents(engine.sensorEventQueue,
               &event, 1) > 0) {
-                //                        LOGI("x=%f y=%f z=%f",
-                //                                event.acceleration.x, event.acceleration.y,
-                //                                event.acceleration.z);
+                  // if default device orientarion is landscape
+                  //game.accel( event.acceleration.y, event.acceleration.x, event.acceleration.z);
+                  // if default device orientarion is portrait
+                  game.accel( event.acceleration.x, event.acceleration.y, event.acceleration.z);
             }
           }
         }
@@ -168,8 +175,8 @@ void android_main(struct android_app* state) {
           //AudioHelper::destroy();
           //state->destroyRequested = 1;
           //ANativeActivity_finish(state->activity);
-          
-          exit(0); // dirty hack
+          game.save(saveFile);
+          exit(0); // hack
           return;
         }
     }
@@ -177,7 +184,6 @@ void android_main(struct android_app* state) {
       currentTime = clock();
       game.update((float)(currentTime-lastTime)/CLOCKS_PER_SEC);
       lastTime = currentTime;
-
       game.draw();
     }
   }
@@ -241,7 +247,11 @@ int main(int argc, char* argv[])
   glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE | GLUT_BORDERLESS);
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 
-  glutInitWindowPosition(400,100);
+  GLHelper::setWidth(glutGet(GLUT_SCREEN_WIDTH));
+  GLHelper::setHeight(glutGet(GLUT_SCREEN_HEIGHT));
+  int wx = (glutGet(GLUT_SCREEN_WIDTH)-GLHelper::getWidth())/2;
+  int wy = (glutGet(GLUT_SCREEN_HEIGHT)-GLHelper::getHeight())/2;
+  glutInitWindowPosition( wx, wy );
   glutInitWindowSize(GLHelper::getWidth(),GLHelper::getHeight());
 
   nWindow = glutCreateWindow("JumpStory");

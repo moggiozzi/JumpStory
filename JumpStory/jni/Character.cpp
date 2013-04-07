@@ -7,6 +7,19 @@
 
 int jumpSoundId;
 
+void Character::setSpeedX(float x){
+  if ( fabs(x)>fabs(maxSpeed.x()) )
+    speed.setX( maxSpeed.x()*sign(x) );
+  else
+    speed.setX( x );
+}
+void Character::setSpeedY(float y){
+  if ( fabs(y)>fabs(maxSpeed.y()) )
+    speed.setY( maxSpeed.y()*sign(y) );
+  else
+    speed.setY( y );
+}
+
 Character::Character(Texture *charTex){
   sprite = new Sprite(charTex);
   AudioHelper::open("res/jump.ogg", jumpSoundId, false);

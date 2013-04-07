@@ -10,9 +10,11 @@
 #endif
 #include <map>
 
+typedef std::map<uint, Texture*> Textures;
 class ResourceManager{
+  static bool isInit;
   static uint lastTextureID;
-  static std::map<uint, Texture*> textures;
+  static Textures textures;
 #ifdef __ANDROID__
   static JavaVM *jvm;
   static JNIEnv *env;

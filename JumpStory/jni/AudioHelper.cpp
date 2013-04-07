@@ -20,7 +20,8 @@ SLObjectItf AudioHelper::outputMixObject;
 AAssetManager *AudioHelper::assetManager;
 
 bool AudioHelper::init(ANativeActivity* activity){
-  isInit = false;
+  if (isInit)
+  	return true;
   lastSoundId = 0;
 	assetManager = activity->assetManager;
   SLresult result;
@@ -42,7 +43,8 @@ bool AudioHelper::init(ANativeActivity* activity){
   isInit = true;
   return isInit;
 }
-
+void destroy(){
+}
 // create asset audio player
 SLObjectItf AudioHelper::createAssetAudioPlayer(const char * fileName)
 {
@@ -128,11 +130,47 @@ void AudioHelper::stop(int soundId){
   result = (*fdPlayerPlay)->SetPlayState(fdPlayerPlay, SL_PLAYSTATE_STOPPED);
 }
 void AudioHelper::update(){}
+void AudioHelper::stopAll(){
+	SLresult result;
+	SLObjectItf fdPlayerObject;
+	SLPlayItf fdPlayerPlay;
+  for(Sounds::iterator it = sounds.begin(); it!= sounds.end(); ++it){
+    fdPlayerObject = it->second;
+    result = (*fdPlayerObject)->GetInterface(fdPlayerObject, SL_IID_PLAY, &fdPlayerPlay);
+    assert(SL_RESULT_SUCCESS == result);
+    result = (*fdPlayerPlay)->SetPlayState(fdPlayerPlay, SL_PLAYSTATE_STOPPED);
+  }
+}
+void AudioHelper::pauseAll(){
+	SLresult result;
+	SLObjectItf fdPlayerObject;
+	SLPlayItf fdPlayerPlay;
+  for(Sounds::iterator it = sounds.begin(); it!= sounds.end(); ++it){
+    fdPlayerObject = it->second;
+    result = (*fdPlayerObject)->GetInterface(fdPlayerObject, SL_IID_PLAY, &fdPlayerPlay);
+    assert(SL_RESULT_SUCCESS == result);
+    result = (*fdPlayerPlay)->SetPlayState(fdPlayerPlay, SL_PLAYSTATE_PAUSED);
+  }
+}
+void AudioHelper::resumeAll(){
+	SLresult result;
+	SLObjectItf fdPlayerObject;
+	SLPlayItf fdPlayerPlay;
+  for(Sounds::iterator it = sounds.begin(); it!= sounds.end(); ++it){
+    fdPlayerObject = it->second;
+    result = (*fdPlayerObject)->GetInterface(fdPlayerObject, SL_IID_PLAY, &fdPlayerPlay);
+    assert(SL_RESULT_SUCCESS == result);
+    SLuint32 state;
+    result = (*fdPlayerPlay)->GetPlayState(fdPlayerPlay, &state);
+    if ( state == SL_PLAYSTATE_PAUSED )
+      result = (*fdPlayerPlay)->SetPlayState(fdPlayerPlay, SL_PLAYSTATE_PLAYING);
+  }
+}
 #elif _WIN32
 bool AudioHelper::init(){
-  bool res = InitializeOpenAL();
+  isInit = InitializeOpenAL();
   lastSoundId = 0;
-  return res;
+  return isInit;
 }
 
 bool AudioHelper::destroy(){

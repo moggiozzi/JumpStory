@@ -15,6 +15,7 @@ enum GameState{
 };
 
 GameState getGameState();
+GameState getPrevGameState();
 void setGameState(GameState gState);
 
 void setSoundState(bool isEnable);
