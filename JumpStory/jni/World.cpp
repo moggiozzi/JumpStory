@@ -92,11 +92,13 @@ void World::update(float dt){
 
   // враги
   static float ga = 0.0f;
-  ga+=dt*5;
-  ghostPos.setX( ghostPos.x() + g/4*dt );
+  float dx = g/4.0*dt;
+  ga+=dx;
+  ghostPos.setX( ghostPos.x() + dx );
   if( ghostPos.x() > GLHelper::getWidth())
     ghostPos.setX( -(float)ghostTex.getWidth() );
-  ghostPos.setY( ghostPos.y() + g/4*dt + sin(ga)/2 );
+  float s = sin(ga/15.0);
+  ghostPos.setY( ghostPos.y() + g/4.0f*dt + s );
   if(ghostPos.y()-worldPos.y()-ghostTex.getHeight()>GLHelper::getHeight())
     ghostPos.setY( worldPos.y() );
 }

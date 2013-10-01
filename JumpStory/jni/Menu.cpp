@@ -1,6 +1,7 @@
 #include "Menu.h"
 #include "ResourceManager.h"
 #include "GameState.h"
+#include "Settings.h"
 
 enum MenuEntry{ 
   ME_TITLE1,
@@ -15,6 +16,8 @@ enum MenuEntry{
   ME_GAMEOVER,
   ME_TRYAGAIN,
 
+  ME_INPUT_METHOD,
+  ME_DISPLAY_ORIENTATION,
 
   ME_ENTRY_COUNT
 };
@@ -24,14 +27,13 @@ Texture entryTextures[ entryCount ];
 Texture onTex, offTex;
 Rect<int> entryRects [ entryCount ];
 uint textSize=32;
+Rect<int> inputMethod;
+Rect<int> displayOrientation;
 
 bool Menu::init(){
-  if ( GLHelper::getWidth()/64 > 8 )
-    textSize = 64;
-  else if ( GLHelper::getWidth()/32 > 8 )
-    textSize = 32;
-  else textSize = 16;
-  int dy = GLHelper::getHeight()/4;
+  textSize = std::min(GLHelper::getWidth(), GLHelper::getHeight()) / 10;
+
+  int dy = textSize;
   //dy = dy>0 ? dy : 0;
   entryRects[ME_TITLE1].set(GLHelper::getWidth()/2-4*textSize/2,dy,4*textSize, textSize); //jump
   entryRects[ME_TITLE2].set(GLHelper::getWidth()/2-5*textSize/2,textSize+dy,5*textSize, textSize);//story
@@ -48,7 +50,11 @@ bool Menu::init(){
   //dy = dy>0 ? dy : 0;
   entryRects[ME_GAMEOVER].set(GLHelper::getWidth()/2-8*textSize/2,dy,8*textSize, textSize);//GameOver
   entryRects[ME_TRYAGAIN].set(GLHelper::getWidth()/2-8*textSize/2,3*textSize+dy,8*textSize,textSize);//TryAgain
-  //toMenu
+  
+  entryRects[ME_INPUT_METHOD].set(0,GLHelper::getHeight()-textSize,textSize,textSize);
+  entryRects[ME_DISPLAY_ORIENTATION].set(GLHelper::getWidth()-textSize,GLHelper::getHeight()-textSize,textSize,textSize);
+  entryRects[ME_INPUT_METHOD].setWidth( settings.getControlModeName().length() * textSize );
+
   return true;
 }
 
@@ -82,6 +88,8 @@ void Menu::draw(){
   default:
     break;
   }
+  GLHelper::drawText(entryRects[ME_INPUT_METHOD].getPos(), settings.getControlModeName().c_str(), textSize);
+  //GLHelper::drawText(entryRects[ME_DISPLAY_ORIENTATION].getPos(), settings.getOrientationName().c_str(), textSize);
 }
 
 void Menu::touch(int x, int y){
@@ -110,10 +118,16 @@ void Menu::touch(int x, int y){
       setGameState( GS_MENU );
     break;
   }
+  if ( entryRects[ME_INPUT_METHOD].isContain(p) )
+  {
+    settings.nextControlMode();
+    entryRects[ME_INPUT_METHOD].setWidth( settings.getControlModeName().length() * textSize );
+  }
+
 }
 
 bool Menu::keyDown(uint keyCode){
-   GameState gState = getGameState();
+  GameState gState = getGameState();
   switch (gState)
   {
   case GS_MENU:
@@ -124,7 +138,7 @@ bool Menu::keyDown(uint keyCode){
         return true;
       break;
       case KEY_ENTER:
-        setGameState(GS_INITLEVEL);
+        setGameState(GS_INGAME);
         return true;
       break;
     }
@@ -132,7 +146,6 @@ bool Menu::keyDown(uint keyCode){
   case GS_PAUSE:
     switch (keyCode)
     {
-
       case KEY_ESC:
         setGameState(GS_MENU);
         return true;
@@ -142,6 +155,7 @@ bool Menu::keyDown(uint keyCode){
         return true;
       break;
     }
+    break;
   case GS_GAMEOVER:
     switch (keyCode)
     {
@@ -155,6 +169,8 @@ bool Menu::keyDown(uint keyCode){
         return true;
       break;
     }
+    break;
   }
   return false;
 }
+

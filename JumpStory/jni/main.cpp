@@ -9,6 +9,7 @@
 #include "ResourceManager.h"
 #include "GLHelper.h"
 #include "AudioHelper.h"
+#include "Settings.h"
 #include <stdlib.h>
 
 clock_t lastTime=0, currentTime=0;
@@ -159,14 +160,16 @@ void android_main(struct android_app* state) {
         }
         // If a sensor has data, process it now.
         if (ident == LOOPER_ID_USER) {
-          if (engine.accelerometerSensor != NULL) {
+          if ( engine.accelerometerSensor != NULL) {
             ASensorEvent event;
-            while (ASensorEventQueue_getEvents(engine.sensorEventQueue,
-              &event, 1) > 0) {
-                  // if default device orientarion is landscape
-                  //game.accel( event.acceleration.y, event.acceleration.x, event.acceleration.z);
-                  // if default device orientarion is portrait
+            while (ASensorEventQueue_getEvents(engine.sensorEventQueue, &event, 1) > 0) {
+              if ( settings.getControlMode() == CM_ACCEL )
+              {
+                if ( settings.getDeviceDefaultOrientation() == DO_HORIZONTAL )
+                  game.accel( -event.acceleration.y, event.acceleration.x, event.acceleration.z);
+                else // VERTICAL
                   game.accel( event.acceleration.x, event.acceleration.y, event.acceleration.z);
+              }
             }
           }
         }
@@ -244,11 +247,18 @@ int main(int argc, char* argv[])
 #include "Tests.h"
   testGetDist();
   glutInit( &argc, argv );
+#ifdef _DEBUG
+  glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE );
+  glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+  GLHelper::setWidth(1024);
+  GLHelper::setHeight(480);
+#else
   glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE | GLUT_BORDERLESS);
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,GLUT_ACTION_GLUTMAINLOOP_RETURNS);
-
   GLHelper::setWidth(glutGet(GLUT_SCREEN_WIDTH));
   GLHelper::setHeight(glutGet(GLUT_SCREEN_HEIGHT));
+#endif
+
   int wx = (glutGet(GLUT_SCREEN_WIDTH)-GLHelper::getWidth())/2;
   int wy = (glutGet(GLUT_SCREEN_HEIGHT)-GLHelper::getHeight())/2;
   glutInitWindowPosition( wx, wy );
